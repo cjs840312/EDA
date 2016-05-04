@@ -1,11 +1,13 @@
-all : bin/cmd
+all : mkdir bin/cmd
+
+mkdir :
+	mkdir -p bin
+	mkdir -p obj
 
 bin/cmd : obj/main.o obj/cmdReader.o obj/key_def.o  obj/help_function.o
-	test -d bin || mkdir bin
 	g++ obj/main.o obj/key_def.o obj/cmdReader.o obj/help_function.o -o $@
 
 obj/main.o : src/main.cpp src/cmdReader.h src/help_function.h
-	test -d obj || mkdir obj
 	g++ -c $< -o $@
 
 obj/cmdReader.o : src/cmdReader.cpp src/key_def.h src/cmdReader.h 

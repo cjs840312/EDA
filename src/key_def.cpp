@@ -35,10 +35,7 @@ char mygetc(istream& istr)
    return ch;
 }
 
-void mybeep()
-{
-   cout << char(BEEP_CHAR);
-}
+void mybeep(){ cout << char(BEEP_CHAR); }
 
 ParseChar getChar(istream& istr)
 {
@@ -49,7 +46,7 @@ ParseChar getChar(istream& istr)
    switch (ch) 
    {
 //      case LINE_BEGIN_KEY:  // Ctrl-a
-//     case LINE_END_KEY:    // Ctrl-e
+//      case LINE_END_KEY:    // Ctrl-e
 //      case INPUT_END_KEY:   // Ctrl-d
       case TAB_KEY:         // Tab   or Ctrl-i
       case NEWLINE_KEY:     // Enter or ctrl-m

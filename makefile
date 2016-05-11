@@ -1,22 +1,58 @@
-all : mkdir bin/cmd
+all : bin obj bin/cmd
+	@echo "\nCompiling complete !!\n"
 
-mkdir :
-	mkdir -p bin
-	mkdir -p obj
+bin :
+	@echo -n " > making directory \"bin\" ...   "
+	@mkdir bin
+	@echo "Success !!"
+obj :
+	@echo -n " > making directory \"obj\" ...   "
+	@mkdir obj
+	@echo "Success !!"
 
-bin/cmd : obj/main.o obj/cmdReader.o obj/key_def.o  obj/help_function.o
-	g++ obj/main.o obj/key_def.o obj/cmdReader.o obj/help_function.o -o $@
+bin/cmd : obj/main.o obj/cmdPublic.o obj/cmdPrivate.o obj/baseCommand.o obj/key_def.o  obj/help_function.o obj/cmdCommon.o
+	@echo -n " > linking object file ...        "
+	@g++  $^ -o $@
+	@echo "Success !!"
+obj/main.o : src/main.cpp src/cmd.h src/help_function.h
+	@echo -n " > compilng main.cpp ...          "
+	@g++ -c $< -o $@
+	@echo "Success !!"
+obj/cmdPublic.o : src/cmdPublic.cpp src/key_def.h src/cmd.h
+	@echo -n " > compilng cmdPublic.cpp ...     "
+	@g++ -c $< -o $@
+	@echo "Success !!"
 
-obj/main.o : src/main.cpp src/cmdReader.h src/help_function.h
-	g++ -c $< -o $@
+obj/baseCommand.o : src/baseCommand.cpp src/key_def.h src/cmd.h
+	@echo -n " > compilng baseCommand.cpp ...   "
+	@g++ -c $< -o $@
+	@echo "Success !!"
 
-obj/cmdReader.o : src/cmdReader.cpp src/key_def.h src/cmdReader.h 
-	g++ -c $< -o $@
+obj/cmdPrivate.o : src/cmdPrivate.cpp src/cmd.h
+	@echo -n " > compilng cmdPrivate.cpp ...    "
+	@g++ -c $< -o $@
+	@echo "Success !!"
 
 obj/key_def.o : src/key_def.cpp src/key_def.h
-	g++ -c $< -o $@
+	@echo -n " > compilng key_def.cpp ...       "
+	@g++ -c $< -o $@
+	@echo "Success !!"
 
-obj/help_function.o: src/help_function.cpp 
-	g++ -c $< -o $@
+obj/help_function.o : src/help_function.cpp 
+	@echo -n " > compilng help_function.cpp ... "
+	@g++ -c $< -o $@
+	@echo "Success !!"
+
+obj/cmdCommon.o: src/cmdCommon.cpp src/cmdCommon.h
+	@echo -n " > compilng cmdCommon.cpp ...     "
+	@g++ -c $< -o $@
+	@echo "Success !!"
+
 clean :
-	rm -f bin/* obj/* 
+	@echo -n "deleting binary file ...          "
+	@rm -f bin/*
+	@echo "Success !!"
+
+	@echo -n "deleting object file ...          " 
+	@rm -f obj/*
+	@echo "Success !!"

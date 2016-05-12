@@ -33,11 +33,34 @@ CmdParser::closeDofile()
 {   
    assert(_dofile != 0);
    _dofileStack.pop();
+   _dofile->close();
    delete _dofile;
    if(_dofileStack.empty())
       _dofile=0;
     else
       _dofile=_dofileStack.top();
+}
+
+void
+CmdParser::closeOutput()
+{   
+   assert(_MatchOut != 0);
+   _MatchOut->close();
+   delete _MatchOut;
+}
+
+bool
+CmdParser::openOutput(const string& out)
+{
+   fstream f(out.c_str());
+   if(f.is_open())
+      return false;
+   else
+   {
+      _MatchOut = new ofstream(out.c_str());
+      return true;
+   }
+
 }
 
 bool

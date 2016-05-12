@@ -1,4 +1,4 @@
-all : bin obj bin/cmd
+all : bin obj bin/bmatch
 	@echo "\nCompiling complete !!\n"
 
 bin :
@@ -10,7 +10,7 @@ obj :
 	@mkdir obj
 	@echo "Success !!"
 
-bin/cmd : obj/main.o obj/cmdPublic.o obj/cmdPrivate.o obj/baseCommand.o obj/key_def.o  obj/help_function.o obj/cmdCommon.o
+bin/bmatch : obj/main.o obj/cmdPublic.o obj/cmdPrivate.o obj/baseCommand.o obj/key_def.o  obj/help_function.o obj/cmdCommon.o
 	@echo -n " > linking object file ...        "
 	@g++  $^ -o $@
 	@echo "Success !!"

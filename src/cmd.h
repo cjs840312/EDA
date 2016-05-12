@@ -102,6 +102,7 @@ public:
    CmdParser(const string& p) : 
         _prompt(p), 
         _dofile(0),
+        _MatchOut(0),
         _readBufPtr(_readBuf),
         _readBufEnd(_readBuf),
         _historyIdx(0),
@@ -110,6 +111,9 @@ public:
 
    bool openDofile(const string& dof);
    void closeDofile();
+
+   bool openOutput(const string& out);
+   void closeOutput();
 
    bool regCmd(const string&, unsigned, CmdExec*);
    CmdExec* getCmd(string);
@@ -152,6 +156,7 @@ private:
    const            string _prompt;          // command prompt
    
    ifstream*        _dofile;                 // for command script
+   ofstream*        _MatchOut;               // for output file
    CmdMap           _cmdMap;                 // map from string to command
    stack<ifstream*> _dofileStack;            // For recursive dofile calling
    vector<string>   _history;                // oldest:_history[0],latest:_hist.back()

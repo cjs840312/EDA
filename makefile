@@ -14,36 +14,36 @@ bin/bmatch : obj/main.o obj/cmdPublic.o obj/cmdPrivate.o obj/baseCommand.o obj/k
 	@echo -n " > linking object file ...        "
 	@g++  $^ -o $@
 	@echo "Success !!"
-obj/main.o : src/main.cpp src/cmd.h src/help_function.h
+obj/main.o : src/main.cpp src/cmd/cmd.h src/cmd/help_function.h
 	@echo -n " > compilng main.cpp ...          "
 	@g++ -c $< -o $@
 	@echo "Success !!"
-obj/cmdPublic.o : src/cmdPublic.cpp src/key_def.h src/cmd.h
+obj/cmdPublic.o : src/cmd/cmdPublic.cpp src/cmd/key_def.h src/cmd/cmd.h
 	@echo -n " > compilng cmdPublic.cpp ...     "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
-obj/baseCommand.o : src/baseCommand.cpp src/key_def.h src/cmd.h
+obj/baseCommand.o : src/cmd/baseCommand.cpp src/cmd/key_def.h src/cmd/cmd.h
 	@echo -n " > compilng baseCommand.cpp ...   "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
-obj/cmdPrivate.o : src/cmdPrivate.cpp src/cmd.h
+obj/cmdPrivate.o : src/cmd/cmdPrivate.cpp src/cmd/cmd.h
 	@echo -n " > compilng cmdPrivate.cpp ...    "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
-obj/key_def.o : src/key_def.cpp src/key_def.h
+obj/key_def.o : src/cmd/key_def.cpp src/cmd/key_def.h
 	@echo -n " > compilng key_def.cpp ...       "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
-obj/help_function.o : src/help_function.cpp 
+obj/help_function.o : src/cmd/help_function.cpp 
 	@echo -n " > compilng help_function.cpp ... "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
-obj/cmdCommon.o: src/cmdCommon.cpp src/cmdCommon.h
+obj/cmdCommon.o: src/cmd/cmdCommon.cpp src/cmd/cmdCommon.h
 	@echo -n " > compilng cmdCommon.cpp ...     "
 	@g++ -c $< -o $@
 	@echo "Success !!"

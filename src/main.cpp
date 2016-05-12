@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
-#include "cmd.h"
-#include "help_function.h"
+#include "cmd/cmd.h"
+#include "cmd/help_function.h"
 using namespace std;
 
 extern bool initCommonCmd();

@@ -73,7 +73,7 @@ QuitCmd::exec(const string& option)
       return errorOption(CMD_OPT_EXTRA, target[1]);
    else if(tokens.empty())
    {
-      cout << "Are you sure to quit (Yes/No)? [No] ";
+      cout << "Are you sure to quit (Yes/No)? ";
       char str[1024];
       cin.getline(str, 1024);
       string ss = string(str);
@@ -89,7 +89,7 @@ QuitCmd::exec(const string& option)
    }
    else if(getParameter(tokens, target))
    {
-      if (!myStrNCmp("-Forced", tokens[0], 2))
+      if (!myStrNCmp("-Forced", target[0], 2))
          return errorOption(CMD_OPT_ILLEGAL, tokens[0]);
       else
          return CMD_EXEC_QUIT;  // ready to quit
@@ -129,8 +129,10 @@ HistoryCmd::exec(const string& option)
       cmdMgr->printHistory();
    else if(getParameter(tokens, target))
    {
-      if (!myStr2Int(tokens[0], nPrint))
-         return errorOption(CMD_OPT_ILLEGAL, tokens[0]);
+      if (!myStr2Int(target[0], nPrint))
+         return errorOption(CMD_OPT_ILLEGAL, target[0]);
+      else
+      	cmdMgr->printHistory(nPrint);
    }
    else
       return CMD_EXEC_ERROR;
@@ -183,8 +185,8 @@ DofileCmd::exec(const string& option)
       return errorOption(CMD_OPT_EXTRA, target[1]);
    else if(getParameter(tokens, target))
    {
-      if (!cmdMgr->openDofile(tokens[0]))
-         return errorOption(CMD_OPT_FOPEN_FAIL, tokens[0]);
+      if (!cmdMgr->openDofile(target[0]))
+         return errorOption(CMD_OPT_FOPEN_FAIL, target[0]);
    }
    else
       return CMD_EXEC_ERROR;

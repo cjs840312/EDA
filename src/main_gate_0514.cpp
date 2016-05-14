@@ -1,5 +1,5 @@
 #include<iostream>
-#include"gate.cpp"
+#include"gate_0514.cpp"
 using namespace std;
 
 int main(){

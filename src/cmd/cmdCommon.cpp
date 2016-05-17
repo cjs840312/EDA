@@ -3,8 +3,11 @@
 #include <vector>
 #include "help_function.h"
 #include "cmdCommon.h"
+#include "myUsage.h"
 
 using namespace std;
+
+extern MyUsage* myusage;
 
 bool
 initCommonCmd()
@@ -12,7 +15,8 @@ initCommonCmd()
    if (!(cmdMgr->regCmd("Quit"   , 1, new QuitCmd)       &&
          cmdMgr->regCmd("HIStory", 3, new HistoryCmd)    &&
          cmdMgr->regCmd("HELp"   , 3, new HelpCmd)       &&
-         cmdMgr->regCmd("DOfile" , 2, new DofileCmd)         ))
+         cmdMgr->regCmd("DOfile" , 2, new DofileCmd)     &&    
+         cmdMgr->regCmd("Usage"  , 1, new UsageCmd)         ))
    {
       cerr << "Registering \"init\" commands fails... exiting" << endl;
       return false;
@@ -27,7 +31,6 @@ initCommonCmd()
 CmdExecStatus
 HelpCmd::exec(const string& option)
 {
-   
    vector<string> tokens,target ;
    myStr2Tok(option,tokens);
 
@@ -90,7 +93,7 @@ QuitCmd::exec(const string& option)
    else if(getParameter(tokens, target))
    {
       if (!myStrNCmp("-Forced", target[0], 2))
-         return errorOption(CMD_OPT_ILLEGAL, tokens[0]);
+         return errorOption(CMD_OPT_ILLEGAL, target[0]);
       else
          return CMD_EXEC_QUIT;  // ready to quit
    }
@@ -132,7 +135,7 @@ HistoryCmd::exec(const string& option)
       if (!myStr2Int(target[0], nPrint))
          return errorOption(CMD_OPT_ILLEGAL, target[0]);
       else
-      	cmdMgr->printHistory(nPrint);
+         cmdMgr->printHistory(nPrint);
    }
    else
       return CMD_EXEC_ERROR;
@@ -205,4 +208,44 @@ DofileCmd::help() const
 {
    cout << setw(15) << left << "DOfile: "
         << "execute the commands in the dofile" << endl;
+}
+
+
+//----------------------------------------------------------------------
+//    Usage [ -Time | -Memory ]
+//----------------------------------------------------------------------
+CmdExecStatus
+UsageCmd::exec(const string& option)
+{
+   
+   vector<string> tokens,target ;
+   myStr2Tok(option,tokens);
+
+   if(tokens.size()>1)
+      return errorOption(CMD_OPT_EXTRA, target[1]);
+   else if(tokens.empty())
+      myusage->report(true,true);
+   else if(getParameter(tokens, target))
+   {
+      if (myStrNCmp("-Time", target[0], 2))
+         myusage->report(true,false);
+      else if(myStrNCmp("-Memory", target[0], 2))
+         myusage->report(false,true);
+   }
+   else
+      return CMD_EXEC_ERROR;
+   return CMD_EXEC_DONE;
+}
+
+void
+UsageCmd::usage(ostream& os) const
+{
+   os << "Usage: Usage [ -Time | -Memory ]" << endl;
+}
+
+void
+UsageCmd::help() const
+{
+   cout << setw(15) << left << "Usage: "
+        << "show time and memory usage" << endl;
 }

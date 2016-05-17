@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include "cmd/cmd.h"
 #include "cmd/help_function.h"
+#include "cmd/myUsage.h"
 using namespace std;
 
 extern bool initCommonCmd();
 
 CmdParser* cmdMgr = new CmdParser("cmd> ");
+MyUsage* myusage;
 
 int main(int argc, char** argv)
 {
@@ -67,11 +69,16 @@ int main(int argc, char** argv)
        <<"* Last modified : 2016.05.11                                                   *"<<endl
        <<"* Description   :                                                              *"<<endl
        <<"********************************************************************************"<<endl;
+
+   myusage = new MyUsage();
+   
    CmdExecStatus status = CMD_EXEC_DONE;
    while (status != CMD_EXEC_QUIT) 
    {
+      myusage->start();
       status = cmdMgr->execOneCmd();
       cout << endl;
+      myusage->stop();
    }
 
    return 0;

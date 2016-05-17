@@ -43,6 +43,7 @@ ParseChar getChar(istream& istr)
 
    if (istr.eof())
       return INPUT_END_KEY;
+   
    switch (ch) 
    {
 //      case LINE_BEGIN_KEY:  // Ctrl-a

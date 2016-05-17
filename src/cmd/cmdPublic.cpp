@@ -13,8 +13,7 @@ CmdParser::openDofile(const string& dof)
 {
    _dofile = new ifstream(dof.c_str());   
    _dofileStack.push(_dofile);
-
-   if((*_dofile).fail() || _dofileStack.size()>1024)
+   if(_dofile->fail() || _dofileStack.size()>10)
    {    
     _dofileStack.pop();
     delete _dofile;

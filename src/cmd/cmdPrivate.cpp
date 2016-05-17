@@ -25,7 +25,7 @@ bool CmdParser::readCmd(istream& istr)
             cout << char(NEWLINE_KEY);
             if(_dofile!=0)
                 closeDofile();
-            return true;
+            return *_readBuf!='\0';
         }
         switch (pch)
         {
@@ -47,8 +47,7 @@ bool CmdParser::readCmd(istream& istr)
         case NEWLINE_KEY    :
             addHistory();
             cout << char(NEWLINE_KEY);
-//            resetBufAndPrintPrompt();
-            return true;
+            return *_readBuf!='\0';
         case COMBO_UP_KEY   :
             moveToHistory(_historyIdx - 1);
             break;
@@ -271,33 +270,32 @@ CmdParser::moveToHistory(int index)
 void
 CmdParser::addHistory()
 {
-    int first=0;
-    int last =_readBufEnd-_readBuf;
-    while(*(_readBuf+first)==' ')
-        first++;
-    while(*(_readBuf+last-1)==' ')
-        last--;
-    for(int n=0;n<last-first;n++)
-        _readBuf[n]=_readBuf[n+first];
-        _readBuf[last]='\0';
+   int first=0;
+   int last =_readBufEnd-_readBuf;
+   while(*(_readBuf+first)==' ')
+       first++;
+   while(*(_readBuf+last-1)==' ')
+       last--;
+   for(int n=0;n<last-first;n++)
+       _readBuf[n]=_readBuf[n+first];
+       _readBuf[last]='\0';
 
+   if( *_readBuf!='\0')
+   {
+      if(!_tempCmdStored)
+         _history.push_back(_readBuf);
+      else
+      {
+         _history.back()=_readBuf;
+         _tempCmdStored=false;
+      }
 
-    if( *_readBuf!='\0')
-    {
-        if(!_tempCmdStored)
-        _history.push_back(_readBuf);
-        else
-        {
-            _history.back()=_readBuf;
-            _tempCmdStored=false;
-        }
-
-    }
-    else if(_tempCmdStored)
-        {
-            _history.erase(_history.end()-1);
-            _tempCmdStored=false;
-        }
+   }
+   else if(_tempCmdStored)
+   {
+      _history.erase(_history.end()-1);
+      _tempCmdStored=false;
+   }
     _historyIdx=_history.size();
 
 }

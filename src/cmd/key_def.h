@@ -1,7 +1,7 @@
 #ifndef KEY_DEF_H
 #define KEY_DEF_H
 
-#include <climits>
+//#include <climits>
 
 enum ParseChar
 {
@@ -44,12 +44,12 @@ enum ParseChar
    MOD_KEY_BEGIN    = COMBO_INSERT_KEY,
    MOD_KEY_END      = COMBO_PG_DOWN_KEY,
 
-// UNDEFINED_KEY  = ( 1<<30 ),
-   UNDEFINED_KEY  = INT_MAX,
+   UNDEFINED_KEY  = ( 1<<30 ),
+//   UNDEFINED_KEY  = INT_MAX,
 
    // For output only, you don't need to modify this part
    BEEP_CHAR        = 7,
-   BACK_SPACE_CHAR  = 8,
+//   BACK_SPACE_CHAR  = 8,
 
    // dummy end
 //   PARSE_CHAR_END

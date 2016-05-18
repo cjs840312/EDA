@@ -1,5 +1,5 @@
 all : bin obj bin/bmatch
-	@echo "\nCompiling complete !!\n"
+	@echo "\nCompile complete !!\n"
 
 bin :
 	@echo -n " > making directory \"bin\" ...   "
@@ -20,7 +20,7 @@ obj/main.o : src/main.cpp src/cmd/cmd.h src/cmd/help_function.h
 	@g++ -c $< -o $@
 	@echo "Success !!"
 	
-obj/cmdPublic.o : src/cmd/cmdPublic.cpp src/cmd/key_def.h src/cmd/cmd.h
+obj/cmdPublic.o : src/cmd/cmdPublic.cpp src/cmd/key_def.h src/cmd/cmd.h src/cmd/help_function.h
 	@echo -n " > compilng cmdPublic.cpp ...     "
 	@g++ -c $< -o $@
 	@echo "Success !!"
@@ -30,7 +30,7 @@ obj/baseCommand.o : src/cmd/baseCommand.cpp src/cmd/key_def.h src/cmd/cmd.h
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
-obj/cmdPrivate.o : src/cmd/cmdPrivate.cpp src/cmd/cmd.h
+obj/cmdPrivate.o : src/cmd/cmdPrivate.cpp src/cmd/cmd.h src/cmd/help_function.h
 	@echo -n " > compilng cmdPrivate.cpp ...    "
 	@g++ -c $< -o $@
 	@echo "Success !!"

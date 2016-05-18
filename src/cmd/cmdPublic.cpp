@@ -188,26 +188,5 @@ CmdParser::getCmd(string cmd)
     mandCmd.resize(mandCmd.size()-1);
   }
   return e;
-
-  /*
-	// TODO...
-	for(CmdMap::iterator it=_cmdMap.begin();it!=_cmdMap.end();it++)
-	{
-		string rc=(*it).first+(*it).second->getOptCmd(); 
-
-		if(myStrNCmp(rc,cmd,(*it).first.size()))
-		{
-			e=(*it).second;
-			break;
-		}
-	}
-  */
-      
    
-}
-
-void
-CmdParser::listCmd(const string& str)
-{
-    //TODO...
 }

@@ -1,5 +1,7 @@
 #include <cassert>
+#include <iomanip>
 #include <cstring>
+#include "help_function.h"
 #include "cmd.h"
 
 using namespace std;
@@ -67,7 +69,8 @@ bool CmdParser::readCmd(istream& istr)
             moveToHistory(_historyIdx + PG_OFFSET);
             break;
         case TAB_KEY        : 
-            insertChar(' ',TAB_POSITION-((_readBufPtr-_readBuf)%TAB_POSITION));
+//            insertChar(' ',TAB_POSITION-((_readBufPtr-_readBuf)%TAB_POSITION));
+            listCmd(_readBuf);
             break;
         case COMBO_INSERT_KEY     : // not yet supported; fall through to UNDEFINE
         case UNDEFINED_KEY:
@@ -313,4 +316,71 @@ CmdParser::retrieveHistory()
     strcpy(_readBuf, _history[_historyIdx].c_str());
     cout << _readBuf;
     _readBufPtr = _readBufEnd = _readBuf + _history[_historyIdx].size();
+}
+
+void
+CmdParser::reprintCmd()
+{
+  cout<<endl;
+  printPrompt();
+
+  for(char* n= _readBuf ; n < _readBufEnd ; n++)
+    cout<<*n;
+
+  for(char* n= _readBufEnd ; n > _readBufPtr ; n--)
+    cout<<'\b';
+
+}
+
+void
+CmdParser::listCmd(const string& str)
+{
+    //TODO...
+    string s = str;  s.resize(_readBufPtr-_readBuf);
+    bool empty =true ;int x=0;
+    while(s[x]!=0) { if(s[x]!=' ') empty=false; x++; }
+
+    if(!empty)
+    {
+      vector<string> match;
+      for(CmdMap::iterator it=_cmdMap.begin();it!=_cmdMap.end();it++)
+      {
+        string rc=(*it).first+(*it).second->getOptCmd();
+
+        if(myStrNCmp(rc,s,s.size()))
+          match.push_back(rc);
+      }
+
+      int size=match.size();
+      if(size==1)
+      {
+        for(int i=s.size(),j=match[0].size(); i<j ;i++)
+          insertChar(match[0][i]);
+      }
+      else if(size>1)
+      {
+        cout<<endl<<endl;
+        for(int i=0;i<size;i++)
+        {
+          cout << setw(12) << left << match[i];
+          if(i%6==5) cout<<endl;
+        }
+        cout<<endl;
+        reprintCmd();
+      }
+      else
+        mybeep();
+    }
+    else
+    {
+      int n=0;
+      cout<<endl<<endl;
+      for(CmdMap::iterator it=_cmdMap.begin() ; it!=_cmdMap.end();it++,n++)
+      {
+        cout << setw(12) << left << ((*it).first+(*it).second->getOptCmd());
+        if(n%6==5) cout<<endl;
+      }
+      cout<<endl<<endl;
+      resetBufAndPrintPrompt();
+    }
 }

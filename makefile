@@ -50,18 +50,23 @@ obj/cmdCommon.o: src/cmd/cmdCommon.cpp src/cmd/cmdCommon.h
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
+obj/gates.o : src/gate/gates.cpp src/gate/gate_def.h
+	@echo -n " > compilng gates.cpp ...         "
+	@g++ -c $< -o $@
+	@echo "Success !!"
+
 obj/File.o: src/sat/File.cpp src/sat/File.h
-	@echo -n " > compilng File.cpp ...     "
+	@echo -n " > compilng File.cpp ...          "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
 obj/Proof.o: src/sat/Proof.cpp src/sat/Proof.h
-	@echo -n " > compilng Proof.cpp ...     "
+	@echo -n " > compilng Proof.cpp ...         "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
 obj/Solver.o : src/sat/Solver.cpp src/sat/Solver.h
-	@echo -n " > compilng Solver.cpp ...     "
+	@echo -n " > compilng Solver.cpp ...        "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 

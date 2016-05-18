@@ -356,6 +356,7 @@ CmdParser::listCmd(const string& str)
       {
         for(int i=s.size(),j=match[0].size(); i<j ;i++)
           insertChar(match[0][i]);
+        insertChar(' ');
       }
       else if(size>1)
       {

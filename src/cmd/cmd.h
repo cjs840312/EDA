@@ -61,10 +61,7 @@ public:
 
 protected:
    int myStr2Tok(const string& s, vector<string>& tokens);
-   bool getParameter(vector<string>&, vector<string>&, string="", size_t=0, size_t=0);
-/*   bool lexSingleOption(const string&, string&, bool = true) const;
-   bool lexOptions(const string&, vector<string>&, size_t = 0) const;
-*/
+   bool getParameter(vector<string>&, vector<string>&, size_t=1, string="", size_t=0);
    CmdExecStatus errorOption(CmdOptionError , const string&) const;
 
 private:

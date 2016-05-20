@@ -1,9 +1,9 @@
 #include <iomanip>
 #include <string>
 #include <vector>
-#include "help_function.h"
+#include "../util/help_function.h"
 #include "cmdCommon.h"
-#include "myUsage.h"
+#include "../util/myUsage.h"
 
 using namespace std;
 
@@ -16,11 +16,8 @@ initCommonCmd()
          cmdMgr->regCmd("HIStory", 3, new HistoryCmd)    &&
          cmdMgr->regCmd("HELp"   , 3, new HelpCmd)       &&
          cmdMgr->regCmd("DOfile" , 2, new DofileCmd)     &&    
-         cmdMgr->regCmd("Usage"  , 1, new UsageCmd)         ))
-   {
-      cerr << "Registering \"init\" commands fails... exiting" << endl;
+         cmdMgr->regCmd("Usage"  , 1, new UsageCmd)         ))     
       return false;
-   }
    return true;
 }
 
@@ -35,7 +32,7 @@ HelpCmd::exec(const string& option)
    myStr2Tok(option,tokens);
 
    if(tokens.size()>1)
-      return errorOption(CMD_OPT_EXTRA, target[1]);
+      return errorOption(CMD_OPT_EXTRA, tokens[1]);
    else if(tokens.empty())
       cmdMgr->printHelps();
    else if(getParameter(tokens, target))
@@ -73,7 +70,7 @@ QuitCmd::exec(const string& option)
    myStr2Tok(option,tokens);
 
    if(tokens.size()>1)
-      return errorOption(CMD_OPT_EXTRA, target[1]);
+      return errorOption(CMD_OPT_EXTRA, tokens[1]);
    else if(tokens.empty())
    {
       cout << "Are you sure to quit (Yes/No)? ";
@@ -127,7 +124,7 @@ HistoryCmd::exec(const string& option)
    int nPrint = -1;
 
    if(tokens.size()>1)
-      return errorOption(CMD_OPT_EXTRA, target[1]);
+      return errorOption(CMD_OPT_EXTRA, tokens[1]);
    else if(tokens.empty())
       cmdMgr->printHistory();
    else if(getParameter(tokens, target))
@@ -185,7 +182,7 @@ DofileCmd::exec(const string& option)
    int nPrint = -1;
 
    if(tokens.size()>1)
-      return errorOption(CMD_OPT_EXTRA, target[1]);
+      return errorOption(CMD_OPT_EXTRA, tokens[1]);
    else if(getParameter(tokens, target))
    {
       if (!cmdMgr->openDofile(target[0]))
@@ -222,7 +219,7 @@ UsageCmd::exec(const string& option)
    myStr2Tok(option,tokens);
 
    if(tokens.size()>1)
-      return errorOption(CMD_OPT_EXTRA, target[1]);
+      return errorOption(CMD_OPT_EXTRA, tokens[1]);
    else if(tokens.empty())
       myusage->report(true,true);
    else if(getParameter(tokens, target))

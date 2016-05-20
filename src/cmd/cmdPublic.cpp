@@ -1,7 +1,7 @@
 #include <cassert>
 //#include <cstdlib>
 #include "cmd.h"
-#include "help_function.h"
+#include "../util/help_function.h"
 
 using namespace std;
 

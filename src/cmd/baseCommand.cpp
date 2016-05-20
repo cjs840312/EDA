@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include "cmd.h"
-#include "help_function.h"
+#include "../util/help_function.h"
 #include "cassert"
 
 using namespace std;
@@ -20,15 +20,18 @@ CmdExec::myStr2Tok(const string& s, vector<string>& tokens)
 }
 
 bool
-CmdExec::getParameter(vector<string>& tokens,vector<string>& target, string parameter, size_t size, size_t num)
+CmdExec::getParameter(vector<string>& tokens,vector<string>& target, size_t num, string parameter, size_t size)
 {
    assert(target.empty());
    if(parameter == "")
    {
-      if(!tokens.empty())
+      if(tokens.size()>=num)
       {
-         target.push_back(tokens[0]);
-         tokens.erase(tokens.begin());
+         for(int i=0; i < num ; i++)
+         {
+            target.push_back(tokens[0]);
+            tokens.erase(tokens.begin());
+         }
          return true;
       }   
       else

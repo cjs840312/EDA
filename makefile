@@ -10,17 +10,17 @@ obj :
 	@mkdir obj
 	@echo "Success !!"
 
-bin/bmatch : obj/main.o obj/cmdPublic.o obj/cmdPrivate.o obj/baseCommand.o obj/key_def.o  obj/help_function.o obj/cmdCommon.o
+bin/bmatch : obj/main.o obj/cmdPublic.o obj/cmdPrivate.o obj/baseCommand.o obj/key_def.o  obj/help_function.o obj/cmdCommon.o obj/cmdGate.o
 	@echo -n " > linking object file ...        "
 	@g++  $^ -o $@
 	@echo "Success !!"
 
-obj/main.o : src/main.cpp src/cmd/cmd.h src/cmd/help_function.h
+obj/main.o : src/main.cpp src/cmd/cmd.h src/util/help_function.h src/util/myUsage.h
 	@echo -n " > compilng main.cpp ...          "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 	
-obj/cmdPublic.o : src/cmd/cmdPublic.cpp src/cmd/key_def.h src/cmd/cmd.h src/cmd/help_function.h
+obj/cmdPublic.o : src/cmd/cmdPublic.cpp src/cmd/key_def.h src/cmd/cmd.h src/util/help_function.h
 	@echo -n " > compilng cmdPublic.cpp ...     "
 	@g++ -c $< -o $@
 	@echo "Success !!"
@@ -30,7 +30,7 @@ obj/baseCommand.o : src/cmd/baseCommand.cpp src/cmd/key_def.h src/cmd/cmd.h
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
-obj/cmdPrivate.o : src/cmd/cmdPrivate.cpp src/cmd/cmd.h src/cmd/help_function.h
+obj/cmdPrivate.o : src/cmd/cmdPrivate.cpp src/cmd/cmd.h src/util/help_function.h
 	@echo -n " > compilng cmdPrivate.cpp ...    "
 	@g++ -c $< -o $@
 	@echo "Success !!"
@@ -40,18 +40,23 @@ obj/key_def.o : src/cmd/key_def.cpp src/cmd/key_def.h
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
-obj/help_function.o : src/cmd/help_function.cpp 
+obj/help_function.o : src/util/help_function.cpp 
 	@echo -n " > compilng help_function.cpp ... "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
-obj/cmdCommon.o: src/cmd/cmdCommon.cpp src/cmd/cmdCommon.h
+obj/cmdCommon.o: src/cmd/cmdCommon.cpp src/cmd/cmdCommon.h src/util/myUsage.h
 	@echo -n " > compilng cmdCommon.cpp ...     "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
 obj/gates.o : src/gate/gates.cpp src/gate/gate_def.h
 	@echo -n " > compilng gates.cpp ...         "
+	@g++ -c $< -o $@
+	@echo "Success !!"
+
+obj/cmdGate.o : src/gate/cmdGate.cpp src/gate/cmdGate.h
+	@echo -n " > compilng cmdGate.cpp ...       "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 

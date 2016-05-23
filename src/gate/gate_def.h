@@ -65,20 +65,21 @@ GateClass(  NotGate  );
 GateClass(   Wire    );
 GateClass(  Buffer   );
 
-/*
-   void fanin_delete( int index )   { fanin.erase(fanin.begin()+index); }
-   int  fanin_size()                { return fanin.size();              }
-   Gate* fanin_element(unsigned int index)
-   {
-      return index < fanin.size() ?  fanin[index] : 0 ;
-   }
-*/
+class Circuit {
+	friend class CirMgr;
+	public:
+		Circuit();
+	private:
+		vector<Gate*> internalGate;
+		vector<Gate*> input;
+		vector<Gate*> output;	
+};
 
-/*
-   void fanout_delete(unsigned int index){ fanout.erase(fanout.begin()+index);}
-   int  fanout_size()                    { return fanout.size();              }
-   Gate* fanout_element(unsigned int index)
-   {
-      return index < fanout.size() ?  fanout[index] : 0 ;
-   }
-*/
+class CirMgr{
+	
+	public:
+		CirMgr();
+		parse(string);	
+	private:
+		Circuit c1, c2;	
+};

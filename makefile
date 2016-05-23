@@ -1,21 +1,32 @@
-all : bin obj bin/bmatch
+all : bin obj input output bin/bmatch
 	@echo "\nCompile complete !!\n"
 
 bin :
-	@echo -n " > making directory \"bin\" ...   "
-	@mkdir bin
-	@echo "Success !!"
-obj :
-	@echo -n " > making directory \"obj\" ...   "
-	@mkdir obj
+	@echo -n " > making directory \"bin\" ...      "
+	@mkdir -p bin
 	@echo "Success !!"
 
-bin/bmatch : obj/main.o obj/cmdPublic.o obj/cmdPrivate.o obj/baseCommand.o obj/key_def.o  obj/help_function.o obj/cmdCommon.o obj/cmdGate.o
+obj :
+	@echo -n " > making directory \"obj\" ...      "
+	@mkdir -p obj
+	@echo "Success !!"
+
+input :
+	@echo -n " > making directory \"input\" ...    "
+	@mkdir -p input
+	@echo "Success !!"
+
+output :
+	@echo -n " > making directory \"output\" ...   "
+	@mkdir -p output
+	@echo "Success !!"
+
+bin/bmatch : obj/main.o obj/cmdPublic.o obj/cmdPrivate.o obj/baseCommand.o obj/key_def.o obj/help_function.o obj/cmdCommon.o obj/cmdGate.o obj/CirMgr.o
 	@echo -n " > linking object file ...        "
 	@g++  $^ -o $@
 	@echo "Success !!"
 
-obj/main.o : src/main.cpp src/cmd/cmd.h src/util/help_function.h src/util/myUsage.h
+obj/main.o : src/main.cpp src/cmd/cmd.h src/util/help_function.h src/util/myUsage.h src/gate/CirMgr.h
 	@echo -n " > compilng main.cpp ...          "
 	@g++ -c $< -o $@
 	@echo "Success !!"
@@ -55,8 +66,13 @@ obj/gates.o : src/gate/gates.cpp src/gate/gate_def.h
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
-obj/cmdGate.o : src/gate/cmdGate.cpp src/gate/cmdGate.h
+obj/cmdGate.o : src/gate/cmdGate.cpp src/gate/cmdGate.h src/gate/CirMgr.h src/util/help_function.h
 	@echo -n " > compilng cmdGate.cpp ...       "
+	@g++ -c $< -o $@
+	@echo "Success !!"
+
+obj/CirMgr.o : src/gate/CirMgr.cpp src/gate/CirMgr.h
+	@echo -n " > compilng CirMgr.cpp ...        "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 

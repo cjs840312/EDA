@@ -1,4 +1,6 @@
-#include <iostream>
+#ifndef GATE
+#define GATE
+
 #include <vector>
 #include <string>
 using namespace std;
@@ -7,11 +9,11 @@ class Gate
 {
 public:
    Gate(string type, int id, string name="")
-   : Type(type), ID(id), Name(name), Value(false), Falg(false) {}
+   : Type(type), ID(id), Name(name), Value(false), Flag(false) {}
    virtual ~Gate(){}
 
    void setValue(bool x)  { Value =  x; }
-   void setFlag (bool x)  { flag  =  x; }
+   void setFlag (bool x)  { Flag  =  x; }
 
 
    string getType()  const { return Type;  }
@@ -35,9 +37,10 @@ protected:
    int ID;                 //This inplies the fanout wire number
    string Name;
    bool Value;             //This suggests the value of the output.
+   bool Flag;
    vector<Gate*> fanin;    //This suggests the fanin  list providing pointers to gates.
    vector<Gate*> fanout;   //This suggests the fanout list providing pointers to gates.
-   bool Flag;
+   
 };
 
 
@@ -65,21 +68,4 @@ GateClass(  NotGate  );
 GateClass(   Wire    );
 GateClass(  Buffer   );
 
-class Circuit {
-	friend class CirMgr;
-	public:
-		Circuit();
-	private:
-		vector<Gate*> internalGate;
-		vector<Gate*> input;
-		vector<Gate*> output;	
-};
-
-class CirMgr{
-	
-	public:
-		CirMgr();
-		parse(string);	
-	private:
-		Circuit c1, c2;	
-};
+#endif

@@ -3,6 +3,7 @@
 #include "cmd/cmd.h"
 #include "util/help_function.h"
 #include "util/myUsage.h"
+#include "gate/CirMgr.h"
 using namespace std;
 
 extern bool initCommonCmd();
@@ -10,6 +11,7 @@ extern bool initGateCmd();
 
 CmdParser* cmdMgr = new CmdParser("cmd> ");
 MyUsage* myusage;
+CirMgr* cirMgr = new CirMgr();
 
 int main(int argc, char** argv)
 {

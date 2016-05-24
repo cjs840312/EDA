@@ -1,14 +1,17 @@
 #include <iostream>
 #include <stdlib.h>
 #include "cmd/cmd.h"
-#include "cmd/help_function.h"
-#include "cmd/myUsage.h"
+#include "util/help_function.h"
+#include "util/myUsage.h"
+#include "gate/CirMgr.h"
 using namespace std;
 
 extern bool initCommonCmd();
+extern bool initGateCmd();
 
 CmdParser* cmdMgr = new CmdParser("cmd> ");
 MyUsage* myusage;
+CirMgr* cirMgr = new CirMgr();
 
 int main(int argc, char** argv)
 {
@@ -57,8 +60,11 @@ int main(int argc, char** argv)
       exit(-1);
    }
    
-   if (!initCommonCmd())
+   if (!initCommonCmd() || !initGateCmd())
+   {
+      cerr << "Registering \"init\" commands fails... exiting" << endl;
       return 1;
+   }
 
    system("clear");
    cout<<"********************************************************************************"<<endl

@@ -1,7 +1,7 @@
 #include <cassert>
 #include <iomanip>
 #include <cstring>
-#include "help_function.h"
+#include "../util/help_function.h"
 #include "cmd.h"
 
 using namespace std;

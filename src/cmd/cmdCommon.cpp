@@ -56,8 +56,8 @@ HelpCmd::usage(ostream& os) const
 void
 HelpCmd::help() const
 {
-   cout << setw(15) << left << "HELp: "
-        << "print this help message" << endl;
+   cout << setw(10) << left << "HELp"
+        << ": print this help message" << endl;
 }
 
 //----------------------------------------------------------------------
@@ -109,8 +109,8 @@ QuitCmd::usage(ostream& os) const
 void
 QuitCmd::help() const
 {
-   cout << setw(15) << left << "Quit: "
-        << "quit the execution" << endl;
+   cout << setw(10) << left << "Quit"
+        << ": quit the execution" << endl;
 }
 
 //----------------------------------------------------------------------
@@ -149,8 +149,8 @@ HistoryCmd::usage(ostream& os) const
 void
 HistoryCmd::help() const
 {
-   cout << setw(15) << left << "HIStory: "
-        << "print command history" << endl;
+   cout << setw(10) << left << "HIStory"
+        << ": print command history" << endl;
 }
 
 
@@ -203,8 +203,8 @@ DofileCmd::usage(ostream& os) const
 void
 DofileCmd::help() const
 {
-   cout << setw(15) << left << "DOfile: "
-        << "execute the commands in the dofile" << endl;
+   cout << setw(10) << left << "DOfile"
+        << ": execute the commands in the dofile" << endl;
 }
 
 
@@ -243,6 +243,6 @@ UsageCmd::usage(ostream& os) const
 void
 UsageCmd::help() const
 {
-   cout << setw(15) << left << "Usage: "
-        << "show time and memory usage" << endl;
+   cout << setw(10) << left << "Usage"
+        << ": show time and memory usage" << endl;
 }

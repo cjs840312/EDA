@@ -61,6 +61,6 @@ ReadCmd::usage(ostream& os) const
 void
 ReadCmd::help() const
 {
-   cout << setw(15) << left << "Read: "
-        << "read and parse input file " << endl;
+   cout << setw(10) << left << "Read"
+        << ": read and parse input file " << endl;
 }

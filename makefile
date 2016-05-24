@@ -1,101 +1,31 @@
-all : bin obj input output bin/bmatch
+all : dir bin/bmatch
 	@echo "\nCompile complete !!\n"
 
-bin :
-	@echo -n " > making directory \"bin\" ...      "
-	@mkdir -p bin
-	@echo "Success !!"
+dir :
+	@echo    " > checking directories ...        "
+	@mkdir -p bin obj lib output
 
-obj :
-	@echo -n " > making directory \"obj\" ...      "
-	@mkdir -p obj
-	@echo "Success !!"
-
-input :
-	@echo -n " > making directory \"input\" ...    "
-	@mkdir -p input
-	@echo "Success !!"
-
-output :
-	@echo -n " > making directory \"output\" ...   "
-	@mkdir -p output
-	@echo "Success !!"
-
-bin/bmatch : obj/main.o obj/cmdPublic.o obj/cmdPrivate.o obj/baseCommand.o obj/key_def.o obj/help_function.o obj/cmdCommon.o obj/cmdGate.o obj/CirMgr.o
-	@echo -n " > linking object file ...        "
-	@g++  $^ -o $@
+bin/bmatch : obj/main.o library
+	@echo -n " > linking object file ...         "
+	@g++  $< -o $@  -Llib -lCmd -lSat -lGate
 	@echo "Success !!"
 
 obj/main.o : src/main.cpp src/cmd/cmd.h src/util/help_function.h src/util/myUsage.h src/gate/CirMgr.h
-	@echo -n " > compilng main.cpp ...          "
-	@g++ -c $< -o $@
-	@echo "Success !!"
-	
-obj/cmdPublic.o : src/cmd/cmdPublic.cpp src/cmd/key_def.h src/cmd/cmd.h src/util/help_function.h
-	@echo -n " > compilng cmdPublic.cpp ...     "
+	@echo -n " > compilng main.cpp ...           "
 	@g++ -c $< -o $@
 	@echo "Success !!"
 
-obj/baseCommand.o : src/cmd/baseCommand.cpp src/cmd/key_def.h src/cmd/cmd.h
-	@echo -n " > compilng baseCommand.cpp ...   "
-	@g++ -c $< -o $@
-	@echo "Success !!"
+library :
+	@echo    " > checking libCmd.a ...           "
+	@cd src/cmd ;make -f make.cmd --no-print-directory --silent;
 
-obj/cmdPrivate.o : src/cmd/cmdPrivate.cpp src/cmd/cmd.h src/util/help_function.h
-	@echo -n " > compilng cmdPrivate.cpp ...    "
-	@g++ -c $< -o $@
-	@echo "Success !!"
+	@echo    " > checking libSat.a ...           "
+	@cd src/sat ;make -f make.sat --no-print-directory --silent;
 
-obj/key_def.o : src/cmd/key_def.cpp src/cmd/key_def.h
-	@echo -n " > compilng key_def.cpp ...       "
-	@g++ -c $< -o $@
-	@echo "Success !!"
-
-obj/help_function.o : src/util/help_function.cpp 
-	@echo -n " > compilng help_function.cpp ... "
-	@g++ -c $< -o $@
-	@echo "Success !!"
-
-obj/cmdCommon.o: src/cmd/cmdCommon.cpp src/cmd/cmdCommon.h src/util/myUsage.h
-	@echo -n " > compilng cmdCommon.cpp ...     "
-	@g++ -c $< -o $@
-	@echo "Success !!"
-
-obj/gates.o : src/gate/gates.cpp src/gate/gate_def.h
-	@echo -n " > compilng gates.cpp ...         "
-	@g++ -c $< -o $@
-	@echo "Success !!"
-
-obj/cmdGate.o : src/gate/cmdGate.cpp src/gate/cmdGate.h src/gate/CirMgr.h src/util/help_function.h
-	@echo -n " > compilng cmdGate.cpp ...       "
-	@g++ -c $< -o $@
-	@echo "Success !!"
-
-obj/CirMgr.o : src/gate/CirMgr.cpp src/gate/CirMgr.h
-	@echo -n " > compilng CirMgr.cpp ...        "
-	@g++ -c $< -o $@
-	@echo "Success !!"
-
-obj/File.o: src/sat/File.cpp src/sat/File.h
-	@echo -n " > compilng File.cpp ...          "
-	@g++ -c $< -o $@
-	@echo "Success !!"
-
-obj/Proof.o: src/sat/Proof.cpp src/sat/Proof.h
-	@echo -n " > compilng Proof.cpp ...         "
-	@g++ -c $< -o $@
-	@echo "Success !!"
-
-obj/Solver.o : src/sat/Solver.cpp src/sat/Solver.h
-	@echo -n " > compilng Solver.cpp ...        "
-	@g++ -c $< -o $@
-	@echo "Success !!"
+	@echo    " > checking libGate.a ...          "
+	@cd src/gate ;make -f make.gate --no-print-directory --silent;
 
 clean :
-	@echo -n "deleting binary file ...          "
-	@rm -f bin/*
-	@echo "Success !!"
-
-	@echo -n "deleting object file ...          " 
-	@rm -f obj/*
+	@echo -n "cleaning bin/ obj/ lib/ ...        "
+	@rm -f bin/* obj/* lib/*
 	@echo "Success !!"

@@ -14,6 +14,7 @@ public:
 
    void setValue(bool x)  { Value =  x; }
    void setFlag (bool x)  { Flag  =  x; }
+   void setID   (int  x)  { ID    =  x; }
 
 
    string getType()  const { return Type;  }

@@ -34,7 +34,7 @@ Gate::print_gate()
 //    Input
 //------------------------------------------------------------------------------
 
-Input::Input(int id, string name):Gate( "Input" , id, name ) {}
+Input::Input(int id = 0, string name = ""):Gate( "Input" , id, name ) {}
 
 bool Input::fanin_add(Gate* g) { return false; }
 
@@ -52,7 +52,7 @@ bool Input::compute_Value() { return Value ; }
 //------------------------------------------------------------------------------
 
 
-Output::Output(int id, string name):Gate( "Output" , id, name ) {}
+Output::Output(int id = 0, string name = ""):Gate( "Output" , id, name ) {}
 
 bool
 Output::fanin_add(Gate* g)
@@ -80,7 +80,7 @@ Output::compute_Value()
 //    AndGate
 //------------------------------------------------------------------------------
 
-AndGate::AndGate(int id, string name):Gate( "AndGate" , id, name ) {}
+AndGate::AndGate(int id = 0, string name = ""):Gate( "AndGate" , id, name ) {}
 
 bool
 AndGate::fanin_add(Gate* g)
@@ -113,7 +113,7 @@ AndGate::compute_Value()
 //    NandGate
 //------------------------------------------------------------------------------
 
-NandGate::NandGate(int id, string name):Gate( "NandGate" , id, name ) {}
+NandGate::NandGate(int id = 0, string name = ""):Gate( "NandGate" , id, name ) {}
 
 bool
 NandGate::fanin_add(Gate* g)
@@ -147,7 +147,7 @@ NandGate::compute_Value()
 //    OrGate
 //------------------------------------------------------------------------------
 
-OrGate::OrGate(int id, string name):Gate( "OrGate" , id, name ) {}
+OrGate::OrGate(int id = 0, string name = ""):Gate( "OrGate" , id, name ) {}
 
 bool
 OrGate::fanin_add(Gate* g)
@@ -179,7 +179,7 @@ OrGate::compute_Value()
 //    NorGate
 //------------------------------------------------------------------------------
 
-NorGate::NorGate(int id, string name):Gate( "NorGate" , id, name ) {}
+NorGate::NorGate(int id = 0, string name = ""):Gate( "NorGate" , id, name ) {}
 
 bool
 NorGate::fanin_add(Gate* g)
@@ -213,7 +213,7 @@ NorGate::compute_Value()
 //    XorGate
 //------------------------------------------------------------------------------
 
-XorGate::XorGate(int id, string name):Gate( "XorGate" , id, name ) {}
+XorGate::XorGate(int id = 0, string name = ""):Gate( "XorGate" , id, name ) {}
 
 bool
 XorGate::fanin_add(Gate* g)
@@ -248,7 +248,7 @@ XorGate::compute_Value()
 //    XnorGate
 //------------------------------------------------------------------------------
 
-XnorGate::XnorGate(int id, string name):Gate( "XnorGate" , id, name ) {}
+XnorGate::XnorGate(int id = 0, string name = ""):Gate( "XnorGate" , id, name ) {}
 
 bool
 XnorGate::fanin_add(Gate* g)
@@ -284,7 +284,7 @@ XnorGate::compute_Value()
 //    NotGate
 //------------------------------------------------------------------------------
 
-NotGate::NotGate(int id, string name):Gate( "NotGate" , id, name ) {}
+NotGate::NotGate(int id = 0, string name = ""):Gate( "NotGate" , id, name ) {}
 
 bool
 NotGate::fanin_add(Gate* g)
@@ -319,7 +319,7 @@ NotGate::compute_Value()
 //    Wire
 //------------------------------------------------------------------------------
 
-Wire::Wire(int id, string name):Gate( "Wire" , id, name ) {}
+Wire::Wire(int id = 0, string name = ""):Gate( "Wire" , id, name ) {}
 
 bool
 Wire::fanin_add(Gate* g) 
@@ -349,7 +349,7 @@ Wire::compute_Value()
 //    Buffer
 //------------------------------------------------------------------------------
 
-Buffer::Buffer(int id, string name):Gate( "Buffer" , id, name ) {}
+Buffer::Buffer(int id = 0, string name = ""):Gate( "Buffer" , id, name ) {}
 
 bool
 Buffer::fanin_add(Gate* g) 

@@ -37,6 +37,8 @@ ReadCmd::exec(const string& option)
          cout<<"Read input file 1 \""<<target[0]<<"\" failed" << endl;
          return CMD_EXEC_ERROR;
       }
+      
+      cout << "Read input files \""<<target[0]<<"\" successfully" << endl;
 
       ifstream fin2( target[1].c_str());
       if( !fin2.is_open() || !cirMgr->parse(fin2,1))

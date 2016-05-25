@@ -15,6 +15,9 @@ public:
    Circuit(){}
 
    Gate* getGate(unsigned int);
+   void printCircuit();		// I have no idea how to print a circuit~~
+   void buildgate_list();
+   void removeWire();
 
 private:
    int num;
@@ -40,6 +43,12 @@ class CirMgr
 public:
    CirMgr(){}
    bool parse( ifstream&, int );
+   void printcircuit(Circuit& cir);
+
+protected:
+   void Str2Vars(string& , vector<Gate*>& , Circuit& ); // parse input, output;
+   void Str2Vars(string& , vector<Gate*>& , Gate* , Circuit&);  // parse gates;
+
 
 private:
    Circuit c1, c2;   

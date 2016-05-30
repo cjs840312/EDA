@@ -1,21 +1,26 @@
 all : ../../lib/libGate.a
 
-../../lib/libGate.a : ../../obj/gates.o ../../obj/cmdGate.o ../../obj/CirMgr.o
-	@echo -n " > making library libCmd.a ...     "
-	@ar -rcs $@ $^
-	@echo "Success !!"
+../../lib/libGate.a : ../../obj/gates.o ../../obj/cmdGate.o ../../obj/parse.o ../../obj/circuit.o
+	echo -n " > making library libCmd.a ...     "
+	ar -rcs $@ $^
+	echo "Success !!\n"
 
 ../../obj/gates.o : gates.cpp gate_def.h
-	@echo -n " > compilng gates.cpp ...          "
-	@g++ -c $< -o $@
-	@echo "Success !!"
+	echo -n " > compilng gates.cpp ...          "
+	g++ -c $< -o $@
+	echo "Success !!"
 
 ../../obj/cmdGate.o : cmdGate.cpp cmdGate.h CirMgr.h ../util/help_function.h
-	@echo -n " > compilng cmdGate.cpp ...        "
-	@g++ -c $< -o $@
-	@echo "Success !!"
+	echo -n " > compilng cmdGate.cpp ...        "
+	g++ -c $< -o $@
+	echo "Success !!"
 
-../../obj/CirMgr.o : CirMgr.cpp CirMgr.h
-	@echo -n " > compilng CirMgr.cpp ...         "
-	@g++ -c $< -o $@
-	@echo "Success !!"
+../../obj/parse.o : parse.cpp CirMgr.h
+	echo -n " > compilng parse.cpp ...          "
+	g++ -c $< -o $@
+	echo "Success !!"
+
+../../obj/circuit.o : circuit.cpp CirMgr.h
+	echo -n " > compilng circuit.cpp ...        "
+	g++ -c $< -o $@
+	echo "Success !!"

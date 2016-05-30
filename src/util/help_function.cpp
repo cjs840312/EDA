@@ -26,13 +26,26 @@ bool myStrNCmp(const string& s1, const string& s2, unsigned n)
    return true;
 }
 
-size_t myStrGetTok(const string& str, string& tok, size_t pos=0,const char del=' ')
+size_t myStrGetTok(const string& str, string& tok, size_t pos=0,string del=" ")
 {
    size_t begin = str.find_first_not_of(del, pos);
    if (begin == string::npos) { tok = ""; return begin; }
    size_t end = str.find_first_of(del, begin);
    tok = str.substr(begin, end - begin);
    return end;
+}
+
+int myStr2Tok(const string& s, vector<string>& tokens, string del=" ")
+{
+   string token;
+   size_t pos = myStrGetTok(s, token, 0, del);
+   while (token.size())
+   {
+      tokens.push_back(token);
+      pos = myStrGetTok(s, token, pos, del);
+   }
+   
+   return tokens.size();
 }
 
 // Convert string "str" to integer "num". Return false if str does not appear

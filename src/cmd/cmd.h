@@ -60,7 +60,6 @@ public:
    const string& getOptCmd() const { return _optCmd; }
 
 protected:
-   int myStr2Tok(const string& s, vector<string>& tokens);
    bool getParameter(vector<string>&, vector<string>&, size_t=1, string="", size_t=0);
    CmdExecStatus errorOption(CmdOptionError , const string&) const;
 

@@ -4,5 +4,6 @@
 #include "../cmd/cmd.h"
 
 CmdClass(ReadCmd);
+CmdClass(PrintCmd);
 
 #endif 

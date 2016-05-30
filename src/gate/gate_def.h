@@ -14,8 +14,6 @@ public:
 
    void setValue(bool x)  { Value =  x; }
    void setFlag (bool x)  { Flag  =  x; }
-   void setID   (int  x)  { ID    =  x; }
-
 
    string getType()  const { return Type;  }
    int    getID()    const { return ID;    }
@@ -49,7 +47,7 @@ protected:
 class T: public Gate             \
 {                                \
 public:                          \
-   T(int,string);                       \
+   T(int,string="");             \
    ~T() {}                       \
    bool compute_Value();         \
    bool fanin_add(Gate* g);      \
@@ -68,5 +66,6 @@ GateClass( XnorGate  );
 GateClass(  NotGate  );
 GateClass(   Wire    );
 GateClass(  Buffer   );
+GateClass(  Const    );
 
 #endif

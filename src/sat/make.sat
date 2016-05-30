@@ -3,7 +3,7 @@ all : ../../lib/libSat.a
 ../../lib/libSat.a : ../../obj/File.o ../../obj/Proof.o ../../obj/Solver.o
 	@echo -n " > making library libCmd.a ...     "
 	@ar -rcs $@ $^
-	@echo "Success !!"
+	@echo "Success !!\n"
 
 ../../obj/File.o: File.cpp File.h
 	@echo -n " > compilng File.cpp ...           "

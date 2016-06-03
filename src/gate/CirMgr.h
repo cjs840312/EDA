@@ -45,6 +45,9 @@ public:
    CirMgr(){}
    bool parse( ifstream&, int );
    void printcircuit( int );
+   void optimize( int );
+   void simulate(string="");
+   void match();
 
 private:
    void gate_parse(vector<string>& , vector<Gate*>& , Gate* , Circuit&);

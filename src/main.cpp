@@ -68,11 +68,11 @@ int main(int argc, char** argv)
 
    system("clear");
    cout<<"********************************************************************************"<<endl
-       <<"* Program       : CAD contest                                                  *"<<endl
+       <<"* Program       : CAD contest - NP3                                            *"<<endl
        <<"* Group         : NTU_LTCP                                                     *"<<endl
-       <<"* Author        : Chen, Jia-Shiuan                                             *"<<endl
+       <<"* Author        : J.S Chen , C.Y Peng , C.W Tsai , D.Y Liu                     *"<<endl
        <<"* Version       : Alpha                                                        *"<<endl
-       <<"* Last modified : 2016.05.11                                                   *"<<endl
+       <<"* Last modified : 2016.06.03                                                   *"<<endl
        <<"* Description   :                                                              *"<<endl
        <<"********************************************************************************"<<endl;
 

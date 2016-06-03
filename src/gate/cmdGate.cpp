@@ -12,8 +12,11 @@ extern CirMgr* cirMgr;
 bool
 initGateCmd()
 {
-   if ( !(cmdMgr->regCmd("Read" , 1, new ReadCmd)) ||
-        !(cmdMgr->regCmd("Print" , 1, new PrintCmd))     )
+   if ( !(cmdMgr->regCmd("Read"     , 1, new ReadCmd))     ||
+        !(cmdMgr->regCmd("Print"    , 1, new PrintCmd))    ||
+        !(cmdMgr->regCmd("Optimize" , 1, new OptimizeCmd)) ||
+        !(cmdMgr->regCmd("Simulate" , 1, new SimulateCmd)) ||
+        !(cmdMgr->regCmd("Match"    , 1, new MatchCmd))       )
       return false;
    return true;
 }
@@ -114,4 +117,109 @@ PrintCmd::help() const
 {
    cout << setw(10) << left << "Print"
         << ": print the DFS list of the circuit(s) " << endl;
+}
+
+//----------------------------------------------------------------------
+//    Optimize [ 1 | 2 ]
+//----------------------------------------------------------------------
+CmdExecStatus
+OptimizeCmd::exec(const string& option)
+{
+   vector<string> tokens,target ;
+   myStr2Tok(option,tokens);
+
+   if(tokens.size()>1)
+      return errorOption(CMD_OPT_EXTRA, tokens[1]);
+   else if(tokens.empty())
+   {
+      cirMgr->optimize(1);
+      cirMgr->optimize(2);
+   }
+   else if(getParameter(tokens, target))
+   {
+      if(myStrNCmp("1",target[0],1))
+         cirMgr->optimize(1);
+      else if(myStrNCmp("2",target[0],1))
+         cirMgr->optimize(2);
+      else
+         return errorOption( CMD_OPT_ILLEGAL,target[0] );
+   }
+   else
+      return CMD_EXEC_ERROR;
+   return CMD_EXEC_DONE;
+}
+
+void
+OptimizeCmd::usage(ostream& os) const
+{
+   os << "Usage: Optimize [ 1 | 2 ]" << endl;
+}
+
+void
+OptimizeCmd::help() const
+{
+   cout << setw(10) << left << "Optimize"
+        << ": smiplify the circuit by easy method" << endl;
+}
+
+//----------------------------------------------------------------------
+//    Match
+//----------------------------------------------------------------------
+CmdExecStatus
+MatchCmd::exec(const string& option)
+{
+   vector<string> tokens,target ;
+   myStr2Tok(option,tokens);
+
+   if(tokens.empty())
+      return errorOption(CMD_OPT_EXTRA, tokens[0]);
+   else
+      cirMgr->simulate();
+   return CMD_EXEC_DONE;
+}
+
+void
+MatchCmd::usage(ostream& os) const
+{
+   os << "Usage: Match" << endl;
+}
+
+void
+MatchCmd::help() const
+{
+   cout << setw(10) << left << "Match"
+        << ": match the inputs " << endl;
+}
+
+//----------------------------------------------------------------------
+//    Simulate [ (string) pattern_name]
+//----------------------------------------------------------------------
+CmdExecStatus
+SimulateCmd::exec(const string& option)
+{
+   vector<string> tokens,target ;
+   myStr2Tok(option,tokens);
+
+   if(tokens.size()>1)
+      return errorOption(CMD_OPT_EXTRA, tokens[2]);
+   else if(tokens.empty())
+      cirMgr->simulate();
+   else if(getParameter(tokens, target))
+      cirMgr->simulate(target[0]);
+   else
+      return CMD_EXEC_ERROR;
+   return CMD_EXEC_DONE;
+}
+
+void
+SimulateCmd::usage(ostream& os) const
+{
+   os << "Usage: Simulate [ (string) pattern_name]" << endl;
+}
+
+void
+SimulateCmd::help() const
+{
+   cout << setw(10) << left << "Simulate"
+        << ": find the outputs that might be in the same group" << endl;
 }

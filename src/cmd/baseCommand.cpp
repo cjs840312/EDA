@@ -33,8 +33,8 @@ CmdExec::getParameter(vector<string>& tokens,vector<string>& target, size_t num,
             {
                for(int j=0; j < num ; j++)
                {
-                  target.push_back(tokens[i]);
-                  tokens.erase(tokens.begin()+i);
+                  target.push_back(tokens[i+1]);
+                  tokens.erase(tokens.begin()+i+1);
                }
                return true;
             }

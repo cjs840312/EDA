@@ -5,5 +5,8 @@
 
 CmdClass(ReadCmd);
 CmdClass(PrintCmd);
+CmdClass(OptimizeCmd);
+CmdClass(SimulateCmd);
+CmdClass(MatchCmd);
 
 #endif 

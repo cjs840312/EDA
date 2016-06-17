@@ -6,8 +6,6 @@ using namespace std;
 bool
 CirMgr::satisfy(Gate* g1, Gate* g2, bool inv)
 {
-
-   SatSolver satsolver;
    satsolver.initialize();
 
    c1.clearFlag(); c2.clearFlag();

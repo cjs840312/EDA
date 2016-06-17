@@ -55,7 +55,8 @@ public:
 
 private:
    void gate_parse(vector<string>& , vector<Gate*>& , Gate* , Circuit&);
-   Circuit c1, c2;   
+   Circuit c1, c2;
+   SatSolver satsolver;
 };
 
 #endif

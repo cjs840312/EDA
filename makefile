@@ -7,7 +7,7 @@ dir :
 
 bin/bmatch : library obj/main.o obj/help_function.o
 	@echo -n " > linking object file ...         "
-	@g++  obj/main.o obj/help_function.o -o $@ -Llib -lCmd -lSat -lGate
+	@g++  -o $@ obj/main.o obj/help_function.o -Llib -lGate -lCmd -lSat
 	@echo "Success !!\n"
 
 obj/main.o : src/main.cpp src/cmd/cmd.h src/util/help_function.h src/util/myUsage.h src/gate/CirMgr.h
@@ -23,13 +23,13 @@ obj/help_function.o : src/util/help_function.cpp
 
 library :
 	@echo    "checking libCmd.a ...           "
-	@cd src/cmd ;make -f make.cmd --no-print-directory --silent;
+	@cd src/cmd ;make -f cmd.make --no-print-directory --silent;
 
 	@echo    "checking libSat.a ...           "
-	@cd src/sat ;make -f make.sat --no-print-directory --silent;
+	@cd src/sat ;make -f sat.make --no-print-directory --silent;
 
 	@echo    "checking libGate.a ...          "
-	@cd src/gate ;make -f make.gate --no-print-directory --silent;
+	@cd src/gate ;make -f gate.make --no-print-directory --silent;
 
 clean :
 	@echo -n "cleaning bin/ obj/ lib/ ...        "

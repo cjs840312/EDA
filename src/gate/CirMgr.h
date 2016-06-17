@@ -21,6 +21,7 @@ public:
    void removeList(vector<Gate*>&);
    void clearFlag();
    void simulate();
+   void his_push();
 
 private:
    vector<Gate*> gate_list; // all the gates are inside
@@ -50,6 +51,7 @@ public:
    void simulate();
    void match();
    void FEC();
+   bool satisfy(Gate*, Gate*, bool);
 
 private:
    void gate_parse(vector<string>& , vector<Gate*>& , Gate* , Circuit&);

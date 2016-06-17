@@ -13,7 +13,7 @@ public:
 
    size_t operator() () const
    {
-      size_t temp=gate->getHistory;
+      size_t temp=gate->getHistory();
       if(temp%2==1)
          temp^=1;
       return temp;
@@ -21,10 +21,12 @@ public:
 
    bool operator == (const FEC_Key& k) const 
    {
+
       bool b=true,b0=true,b1=true,b00,b11;
       size_t result;
       vector<size_t>& h1 = gate->getHistorys();
-      vector<size_t>& h2 = k->gate->getHistorys();
+      vector<size_t>& h2 = k.gate->getHistorys();
+
       for(int i=0,size=h1.size();i<size;i++)
       {
          result=(h1[0]^h2[0]);

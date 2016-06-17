@@ -53,7 +53,7 @@ class SatSolver
          Lit li[size];
          for(int i =0;i<size;i++)
          {
-            li[i]= Lit(vi[i])
+            li[i]= Lit(vi[i]);
             lits.push(li[i]); lits.push(~lo);
             _solver->addClause(lits); lits.clear();
          }
@@ -76,7 +76,7 @@ class SatSolver
          Lit li[size];
          for(int i =0;i<size;i++)
          {
-            li[i]= Lit(vi[i])
+            li[i]= Lit(vi[i]);
             lits.push(li[i]); lits.push(lo);
             _solver->addClause(lits); lits.clear();
          }

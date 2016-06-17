@@ -27,17 +27,6 @@ Gate::print_gate()
         cout<< fanout[i]->getID()<<' ';
      cout<<endl;
   }
-}
-
-void
-Gate::setHistory()
-{
-   static int n=0;
-
-   history = history*2 + Value;
-
-   if(++n % 64 == 0)
-      historys.push_back(history);
 
 }
 
@@ -68,6 +57,20 @@ bool Input::compute_Value()
 	return Value ; 
 }
 
+void Input::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
+
+   if(!fanin.empty())
+   {
+      fanin[0]->sat_mod(satsolver);
+      var=fanin[0]->getVar();
+   }
+   else
+      var=satsolver.newVar();
+
+   Flag=true;
+}
 //------------------------------------------------------------------------------
 //    Const
 //------------------------------------------------------------------------------
@@ -77,6 +80,18 @@ Const::Const(int id, string name):Gate( "Const" , id, name ) {}
 bool Const::fanin_add(Gate* g) { return false; }
 
 bool Const::compute_Value() { return Value ; }
+
+void Const::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
+
+   var=satsolver.newVar();
+   if(Value)
+      satsolver.addConst1CNF(var);
+   else
+      satsolver.addConst0CNF(var);
+   Flag=true;
+}
 
 //------------------------------------------------------------------------------
 //    Output
@@ -108,8 +123,15 @@ Output::compute_Value()
 	}
 
 	return Value;
+}
 
+void Output::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
 
+   fanin[0]->sat_mod(satsolver);
+   var=fanin[0]->getVar();
+   Flag=true;
 }
 
 //------------------------------------------------------------------------------
@@ -145,6 +167,21 @@ AndGate::compute_Value()
     return Value;
 }
 
+void AndGate::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
+
+   var=satsolver.newVar();
+   vector<Var> vi;
+   for(int i=0,size=fanin.size();i<size;i++)
+   {
+      fanin[i]->sat_mod(satsolver);
+      vi.push_back(fanin[i]->getVar());
+   }
+   satsolver.addAndCNF(var,vi);
+   Flag=true;
+}
+
 //------------------------------------------------------------------------------
 //    NandGate
 //------------------------------------------------------------------------------
@@ -176,6 +213,20 @@ NandGate::compute_Value()
     return Value;
 }
 
+void NandGate::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
+
+   var=satsolver.newVar();
+   vector<Var> vi;
+   for(int i=0,size=fanin.size();i<size;i++)
+   {
+      fanin[i]->sat_mod(satsolver);
+      vi.push_back(fanin[i]->getVar());
+   }
+   satsolver.addNandCNF(var,vi);
+   Flag=true;
+}
 //------------------------------------------------------------------------------
 //    OrGate
 //------------------------------------------------------------------------------
@@ -204,6 +255,21 @@ OrGate::compute_Value()
 	
 	Flag = true;
     return Value;
+}
+
+void OrGate::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
+
+   var=satsolver.newVar();
+   vector<Var> vi;
+   for(int i=0,size=fanin.size();i<size;i++)
+   {
+      fanin[i]->sat_mod(satsolver);
+      vi.push_back(fanin[i]->getVar());
+   }
+   satsolver.addOrCNF(var,vi);
+   Flag=true;
 }
 
 //------------------------------------------------------------------------------
@@ -236,6 +302,21 @@ NorGate::compute_Value()
 
 	Flag = true;
    	return Value;
+}
+
+void NorGate::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
+
+   var=satsolver.newVar();
+   vector<Var> vi;
+   for(int i=0,size=fanin.size();i<size;i++)
+   {
+      fanin[i]->sat_mod(satsolver);
+      vi.push_back(fanin[i]->getVar());
+   }
+   satsolver.addNorCNF(var,vi);
+   Flag=true;
 }
 
 //------------------------------------------------------------------------------
@@ -271,6 +352,19 @@ XorGate::compute_Value()
    return Value;
 }
 
+void XorGate::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
+
+   var=satsolver.newVar();
+   
+   fanin[0]->sat_mod(satsolver);
+   fanin[1]->sat_mod(satsolver);
+
+   satsolver.addXorCNF(var,fanin[0]->getVar(),fanin[1]->getVar());
+   Flag=true;
+}
+
 //------------------------------------------------------------------------------
 //    XnorGate
 //------------------------------------------------------------------------------
@@ -302,6 +396,19 @@ XnorGate::compute_Value()
 	Value = !Value;
 	Flag = true;
     return Value;
+}
+
+void XnorGate::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
+
+   var=satsolver.newVar();
+   
+   fanin[0]->sat_mod(satsolver);
+   fanin[1]->sat_mod(satsolver);
+
+   satsolver.addXnorCNF(var,fanin[0]->getVar(),fanin[1]->getVar());
+   Flag=true;
 }
 
 //------------------------------------------------------------------------------
@@ -337,6 +444,18 @@ NotGate::compute_Value()
     return Value;
 }
 
+void NotGate::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
+
+   var=satsolver.newVar();
+   
+   fanin[0]->sat_mod(satsolver);
+
+   satsolver.addNotCNF(var,fanin[0]->getVar());
+   Flag=true;
+}
+
 //------------------------------------------------------------------------------
 //    Wire
 //------------------------------------------------------------------------------
@@ -365,6 +484,16 @@ Wire::compute_Value()
 
   	Flag = true;
     return Value;
+}
+
+void Wire::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
+
+   fanin[0]->sat_mod(satsolver);
+
+   var=fanin[0]->getVar();
+   Flag=true;
 }
 
 //------------------------------------------------------------------------------
@@ -396,4 +525,14 @@ Buffer::compute_Value()
 
   	Flag = true;
     return Value;
+}
+
+void Buffer::sat_mod(SatSolver& satsolver)
+{
+   if(Flag)  return;
+
+   fanin[0]->sat_mod(satsolver);
+
+   var=fanin[0]->getVar();
+   Flag=true;
 }

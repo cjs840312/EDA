@@ -16,6 +16,7 @@ initGateCmd()
         !(cmdMgr->regCmd("Print"    , 1, new PrintCmd))    ||
         !(cmdMgr->regCmd("Optimize" , 1, new OptimizeCmd)) ||
         !(cmdMgr->regCmd("Simulate" , 1, new SimulateCmd)) ||
+        !(cmdMgr->regCmd("FECgroup" , 3, new FECgroupCmd)) ||        
         !(cmdMgr->regCmd("Match"    , 1, new MatchCmd))       )
       return false;
    return true;
@@ -219,4 +220,34 @@ SimulateCmd::help() const
 {
    cout << setw(10) << left << "Simulate"
         << ": find the outputs that might be in the same group" << endl;
+}
+
+//----------------------------------------------------------------------
+//    FECgroup
+//----------------------------------------------------------------------
+CmdExecStatus
+FECgroupCmd::exec(const string& option)
+{
+   vector<string> tokens,target ;
+   myStr2Tok(option,tokens);
+
+   if(!tokens.empty())
+      return errorOption(CMD_OPT_EXTRA, tokens[2]);
+   else
+      cirMgr->FEC();
+
+   return CMD_EXEC_DONE;
+}
+
+void
+FECgroupCmd::usage(ostream& os) const
+{
+   os << "Usage: FECgroup" << endl;
+}
+
+void
+FECgroupCmd::help() const
+{
+   cout << setw(10) << left << "FECgroup"
+        << ": find the Functionally Equivalent Candidate group" << endl;
 }

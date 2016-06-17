@@ -6,7 +6,7 @@
 #include "../util/hash.h"
 using namespace std;
 
-#define history_unit sizeof(size_t)*8
+#define history_unit (sizeof(size_t)*8)
 
 static void generate_pattern(stringstream&, int) ;
 static int decide_sim_time(int);
@@ -17,43 +17,65 @@ CirMgr::simulate()
    stringstream patterns;
    string pattern;
 
-   generate_pattern(patterns,c1.in_list.size());
+   int size1=c1.in_list.size();
+   generate_pattern(patterns,size1);
 
+   int count=0;
 	while(getline(patterns,pattern))
    {
+      pattern="000";
    	c1.clearFlag(); c2.clearFlag();
-
-   	for(int i=0,size1=c1.in_list.size(); i<size1; ++i )
-         c1.in_list[i]->setValue( (pattern[i] != '0') ); //setValue(bool x)
+      cout<<"\rSimulating patterns : "<<count;
+   	for(int i=0; i<size1; ++i )
+         c1.in_list[i]->setValue( (pattern[i] != '0') ); 
 
    	c1.simulate();
       c2.simulate();
-   }
-}
-
-void
-Circuit::simulate()
-{
-   int size=out_list.size();
-   for(int i=0; i<size; ++i )
-   {
-      out_list[i]->compute_Value();
-      out_list[i]->setHistory();
+      if(++count%64 == 0)
+      {
+         c1.his_push();
+         c2.his_push();
+      }
    }
 }
 
 void
 CirMgr::FEC()
 {
-   HashMap<FEC_Key<Gate>,Gate*> FECgroup(16);
+   HashMap<FEC_Key<Gate>,Gate*> FEChash(16);
+   Gate *temp;
+   vector<Gate*> &o1 = c1.out_list;
+   vector<Gate*> &o2 = c2.out_list;
 
+   for(int i=0,size=o1.size();i<size;i++)
+   {
+      temp = o1[i];
+//      cout<<o1[i]->getHistory();
+      if( ! FEChash.check(FEC_Key<Gate>(temp),temp)  )
+      {
+         FEChash.insert(FEC_Key<Gate>(temp),temp);
+      }
+      else
+      {
+         // TODO...  sat
+         cout<<satisfy(temp,o1[i],false);
+      }
+   }
+/*
+   for(int i=0,size=o2.size();i<size;i++)
+   {
+      temp = o2[i];
+      if( ! FEChash.check(FEC_Key<Gate>(temp),temp)  )
+      {
+         FEChash.insert(FEC_Key<Gate>(temp),temp);
+      }
+      else
+      {
+         // TODO...  sat
+      }
+   }
 
-   
-
-
-
-
-
+*/
 
 }
 
@@ -85,8 +107,8 @@ int decide_sim_time(int input_size)
       else break;
    }
    n--;
-
    n=n*input_size;
+
    n=((n-1)/history_unit+1)*history_unit;
 
    return n;

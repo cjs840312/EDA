@@ -8,5 +8,6 @@ CmdClass(PrintCmd);
 CmdClass(OptimizeCmd);
 CmdClass(SimulateCmd);
 CmdClass(MatchCmd);
+CmdClass(FECgroupCmd);
 
 #endif 

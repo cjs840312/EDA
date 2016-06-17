@@ -104,3 +104,22 @@ void Circuit::removeList( vector<Gate*>& list)
       delete list[i];
    list.clear();
 }
+
+void
+Circuit::simulate()
+{
+   int size=out_list.size();
+   for(int i=0; i<size; ++i )
+   {
+      out_list[i]->compute_Value();
+      out_list[i]->setHistory();
+   }
+}
+
+void
+Circuit::his_push()
+{
+   int size=out_list.size();
+   for(int i=0; i<size; ++i )
+      out_list[i]->setHistorys();
+}

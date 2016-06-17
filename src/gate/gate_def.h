@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "../sat/sat.h"
 using namespace std;
 
 class Gate
@@ -18,7 +19,8 @@ public:
 
    void setValue(bool x)  { Value =  x; }
    void setFlag (bool x)  { Flag  =  x; }
-   void setHistory();
+   void setHistory() { history = history*2 + Value;}
+   void setHistorys(){ historys.push_back(history);}
 
    string getType()  const { return Type;  }
    int    getID()    const { return ID;    }
@@ -26,6 +28,7 @@ public:
    int    getValue() const { return Value; }
    bool   getFlag()  const { return Flag;  }
    size_t getHistory() const{ return history; }
+   Var    getVar()   const { return var;   }
    vector<size_t>& getHistorys(){ return historys; }
 
  
@@ -34,6 +37,7 @@ public:
 
    virtual bool compute_Value()      = 0;
    virtual bool fanin_add (Gate* g)  = 0;
+   virtual void sat_mod(SatSolver&)  = 0;
    void fanout_add(Gate* g) { fanout.push_back(g); }
 
    void print_gate();
@@ -49,7 +53,7 @@ protected:
    vector<size_t> historys;
    vector<Gate*> fanin;    //This suggests the fanin  list providing pointers to gates.
    vector<Gate*> fanout;   //This suggests the fanout list providing pointers to gates.
-   
+   Var var;
 };
 
 
@@ -60,7 +64,8 @@ public:                          \
    T(int,string="");             \
    ~T() {}                       \
    bool compute_Value();         \
-   bool fanin_add(Gate* g);      \
+   bool fanin_add(Gate*);        \
+   void sat_mod(SatSolver&);     \
 }                                \
 
 

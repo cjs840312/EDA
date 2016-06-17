@@ -20,6 +20,7 @@ public:
    void buildgate_list();
    void removeList(vector<Gate*>&);
    void clearFlag();
+   void simulate();
 
 private:
    vector<Gate*> gate_list; // all the gates are inside
@@ -48,6 +49,7 @@ public:
    void optimize( int );
    void simulate();
    void match();
+   void FEC();
 
 private:
    void gate_parse(vector<string>& , vector<Gate*>& , Gate* , Circuit&);

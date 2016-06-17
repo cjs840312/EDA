@@ -29,6 +29,18 @@ Gate::print_gate()
   }
 }
 
+void
+Gate::setHistory()
+{
+   static int n=0;
+
+   history = history*2 + Value;
+
+   if(++n % 64 == 0)
+      historys.push_back(history);
+
+}
+
 
 //------------------------------------------------------------------------------
 //    Input

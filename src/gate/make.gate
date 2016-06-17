@@ -30,7 +30,7 @@ all : ../../lib/libGate.a
 	g++ -c $< -o $@
 	echo "Success !!"
 
-../../obj/simulate.o : simulate.cpp CirMgr.h
+../../obj/simulate.o : simulate.cpp CirMgr.h ../util/hash.h
 	echo -n " > compilng simulate.cpp ...       "
 	g++ -c $< -o $@
 	echo "Success !!"

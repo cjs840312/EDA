@@ -3,7 +3,10 @@
 #include <stdlib.h>
 #include <string>
 #include "CirMgr.h"
+#include "../util/hash.h"
 using namespace std;
+
+#define history_unit sizeof(size_t)*8
 
 static void generate_pattern(stringstream&, int) ;
 static int decide_sim_time(int);
@@ -13,24 +16,45 @@ CirMgr::simulate()
 {
    stringstream patterns;
    string pattern;
-   
+
    generate_pattern(patterns,c1.in_list.size());
 
 	while(getline(patterns,pattern))
    {
    	c1.clearFlag(); c2.clearFlag();
 
-   	for(int i=0,psize=pattern.size(); i<psize; ++i )
+   	for(int i=0,size1=c1.in_list.size(); i<size1; ++i )
          c1.in_list[i]->setValue( (pattern[i] != '0') ); //setValue(bool x)
 
-
-   	for(int i=0,size1=c1.out_list.size(); i<size1; ++i )
-   		c1.out_list[i]->compute_Value();
-
-      for(int i=0,size2=c1.out_list.size(); i<size2; ++i )
-         c2.out_list[i]->compute_Value();    
+   	c1.simulate();
+      c2.simulate();
    }
+}
+
+void
+Circuit::simulate()
+{
+   int size=out_list.size();
+   for(int i=0; i<size; ++i )
+   {
+      out_list[i]->compute_Value();
+      out_list[i]->setHistory();
+   }
+}
+
+void
+CirMgr::FEC()
+{
+   HashMap<FEC_Key<Gate>,Gate*> FECgroup(16);
+
+
    
+
+
+
+
+
+
 }
 
 void generate_pattern(stringstream& ss, int n) 
@@ -54,13 +78,16 @@ void generate_pattern(stringstream& ss, int n)
 
 int decide_sim_time(int input_size)
 {
-   int temp=(input_size/32+1)*32;
    int n=0;
    while(true)
    {
-      if(n*n<=temp) n++;
+      if(n*n<=input_size) n++;
       else break;
    }
+   n--;
 
-   return temp*(n-1);
+   n=n*input_size;
+   n=((n-1)/history_unit+1)*history_unit;
+
+   return n;
 }

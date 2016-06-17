@@ -46,7 +46,7 @@ public:
    bool parse( ifstream&, int );
    void printcircuit( int );
    void optimize( int );
-   void simulate(string="");
+   void simulate();
    void match();
 
 private:

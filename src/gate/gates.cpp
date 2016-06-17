@@ -36,16 +36,25 @@ Gate::print_gate()
 
 Input::Input(int id, string name):Gate( "Input" , id, name ) {}
 
-bool Input::fanin_add(Gate* g) { return false; }
-
-bool 
-Input::fanout_add(Gate* g)
+bool Input::fanin_add(Gate* g)
 {
-	fanout.push_back(g);
-	return true;
+	if(fanin.size()>=1)
+	  		return false;
+   else
+      fanin.push_back(g);
+  	
+  	return true;
 }
 
-bool Input::compute_Value() { return Value ; }
+bool Input::compute_Value()
+{
+	if( !Flag && !fanin.empty())
+	{
+		Value = fanin[0]->compute_Value();
+		Flag = true;
+	}
+	return Value ; 
+}
 
 //------------------------------------------------------------------------------
 //    Const
@@ -54,13 +63,6 @@ bool Input::compute_Value() { return Value ; }
 Const::Const(int id, string name):Gate( "Const" , id, name ) {}
 
 bool Const::fanin_add(Gate* g) { return false; }
-
-bool 
-Const::fanout_add(Gate* g)
-{
-   fanout.push_back(g);
-   return true;
-}
 
 bool Const::compute_Value() { return Value ; }
 
@@ -82,15 +84,20 @@ Output::fanin_add(Gate* g)
   	return true;
 }
 
-bool Output::fanout_add(Gate* g) { return false; }
-
 bool
 Output::compute_Value()
 {
 	assert(!fanin.empty()) ;
 
-	Value = fanin[0]->getValue();
+	if(!Flag)	
+	{
+		Value = fanin[0]->compute_Value();
+		Flag = true;
+	}
+
 	return Value;
+
+
 }
 
 //------------------------------------------------------------------------------
@@ -107,23 +114,23 @@ AndGate::fanin_add(Gate* g)
 }
 
 bool
-AndGate::fanout_add(Gate* g)
-{
-   fanout.push_back(g);
-   return true;
-}
-
-bool
 AndGate::compute_Value()
 { 
 	int size=fanin.size();
 	assert(size >= 2);
 
+
+	if(Flag)
+		return Value;
+
 	Value =true;
 	for(int i=0 ; i < size ; i++)
-		Value = Value && fanin[i]->getValue();
+	{
+		Value = Value && fanin[i]->compute_Value();
+	}
 
-   return Value;
+	Flag = true;
+    return Value;
 }
 
 //------------------------------------------------------------------------------
@@ -140,24 +147,21 @@ NandGate::fanin_add(Gate* g)
 }
 
 bool
-NandGate::fanout_add(Gate* g)
-{
-	fanout.push_back(g);
-   return true;
-}
-
-bool
 NandGate::compute_Value()
 {
 	int size=fanin.size();
 	assert(size >= 2);
 
+	if(Flag)
+		return Value;
+
 	Value = true;
 	for(int i=0 ; i < size ; i++)
-		Value = Value && fanin[i]->getValue();
+		Value = Value && fanin[i]->compute_Value();
 	Value = !Value;
 
-   return Value;
+	Flag = true;
+    return Value;
 }
 
 //------------------------------------------------------------------------------
@@ -174,22 +178,20 @@ OrGate::fanin_add(Gate* g)
 }
 
 bool
-OrGate::fanout_add(Gate* g)
-{
-	fanout.push_back(g);
-   return true;
-}
-
-bool
 OrGate::compute_Value()
 {
 	int size=fanin.size();
 	assert(size >= 2 );
 
-	for(int i=0 ; i < size ; i++)
-		Value = Value || fanin[i]->getValue();
+	if(Flag)
+		return Value;
 
-   return Value;
+	Value = false;
+	for(int i=0 ; i < size ; i++)
+		Value = Value || fanin[i]->compute_Value();
+	
+	Flag = true;
+    return Value;
 }
 
 //------------------------------------------------------------------------------
@@ -206,24 +208,22 @@ NorGate::fanin_add(Gate* g)
 }
 
 bool
-NorGate::fanout_add(Gate* g)
-{
-	fanout.push_back(g);
-   return true;
-}
-
-bool
 NorGate::compute_Value()
 {
 	int size=fanin.size();
 	assert(size >=2);
 
+	if(Flag)
+		return Value;
+
 	Value = false;
 	for(int i=0 ; i < size ; i++)
-		Value = Value || fanin[i]->getValue();
+		Value = Value || fanin[i]->compute_Value();
 
 	Value = !Value;
-   return Value;
+
+	Flag = true;
+   	return Value;
 }
 
 //------------------------------------------------------------------------------
@@ -244,20 +244,18 @@ XorGate::fanin_add(Gate* g)
 }
 
 bool
-XorGate::fanout_add(Gate* g)
-{
-	fanout.push_back(g);
-   return true;
-}
-
-bool
 XorGate::compute_Value()
 {
 	int size=fanin.size();
 	assert (size == 2);
 
-	Value = fanin[0]->getValue() ^ fanin[1]->getValue();
+	if(Flag)
+		return Value;
 
+	Value = fanin[0]->compute_Value() ^ fanin[1]->compute_Value();
+
+   
+	Flag = true;
    return Value;
 }
 
@@ -279,22 +277,19 @@ XnorGate::fanin_add(Gate* g)
 }
 
 bool
-XnorGate::fanout_add(Gate* g)
-{
-	fanout.push_back(g);
-   return true;
-}
-
-bool
 XnorGate::compute_Value()
 {
 	int size=fanin.size();
 	assert(size == 2);
 
-	Value = fanin[0]->getValue() ^ fanin[1]->getValue();
+	if(Flag)
+		return Value;
+
+	Value = fanin[0]->compute_Value() ^ fanin[1]->compute_Value();
 
 	Value = !Value;
-   return Value;
+	Flag = true;
+    return Value;
 }
 
 //------------------------------------------------------------------------------
@@ -314,12 +309,6 @@ NotGate::fanin_add(Gate* g)
    return true;
 }
 
-bool
-NotGate::fanout_add(Gate* g)
-{
- 	fanout.push_back(g);
-   return true;
-}
 
 bool
 NotGate::compute_Value()
@@ -327,9 +316,13 @@ NotGate::compute_Value()
 	int size=fanin.size();
 	assert(size == 1);
 
-	Value = !fanin[0]->getValue();
+	if(Flag)
+		return Value;
 
-   return Value;
+	Value = !(fanin[0]->compute_Value());
+
+	Flag = true;
+    return Value;
 }
 
 //------------------------------------------------------------------------------
@@ -349,17 +342,17 @@ Wire::fanin_add(Gate* g)
 }
 
 bool 
-Wire::fanout_add(Gate* g)
-{
-	fanout.push_back(g);
-	return true;
-}
-
-bool 
 Wire::compute_Value()
 {
 	assert(fanin.size()==1);
-  	return  fanin[0]->getValue();
+
+	if(Flag)
+		return Value;
+
+  	Value = fanin[0]->compute_Value();
+
+  	Flag = true;
+    return Value;
 }
 
 //------------------------------------------------------------------------------
@@ -378,16 +371,17 @@ Buffer::fanin_add(Gate* g)
    return true;
 }
 
-bool 
-Buffer::fanout_add(Gate* g)
-{
-	fanout.push_back(g);
-	return true;
-}
-
 bool
+
 Buffer::compute_Value()
 {
 	assert(fanin.size()==1);
-  	return  fanin[0]->getValue();
+ 
+	if(Flag)
+		return Value;
+
+  	Value = fanin[0]->compute_Value();
+
+  	Flag = true;
+    return Value;
 }

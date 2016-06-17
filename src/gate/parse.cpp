@@ -28,14 +28,16 @@ static int gatecount=2;
 
 void
 CirMgr::printcircuit( int num)
-{
+{	
+	c1.clearFlag(); c2.clearFlag();
+	
 	Circuit& cir = num==1? c1:c2;
 	cout<<"Circuit "<<num<<" :"<<endl<<endl;
 	
 	int size = cir.out_list.size();
-   for(int i=0;i<size;i++)
-   	cir.printDFS(cir.out_list[i],0);
-   cir.clearFlag();
+	for(int i=0;i<size;i++)
+		cir.printDFS(cir.out_list[i],0);
+   	cir.clearFlag();
 }
 
 bool

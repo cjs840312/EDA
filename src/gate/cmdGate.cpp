@@ -171,10 +171,10 @@ MatchCmd::exec(const string& option)
    vector<string> tokens,target ;
    myStr2Tok(option,tokens);
 
-   if(tokens.empty())
+   if(!tokens.empty())
       return errorOption(CMD_OPT_EXTRA, tokens[0]);
    else
-      cirMgr->simulate();
+      cirMgr->match();
    return CMD_EXEC_DONE;
 }
 
@@ -192,7 +192,7 @@ MatchCmd::help() const
 }
 
 //----------------------------------------------------------------------
-//    Simulate [ (string) pattern_name]
+//    Simulate
 //----------------------------------------------------------------------
 CmdExecStatus
 SimulateCmd::exec(const string& option)
@@ -200,21 +200,18 @@ SimulateCmd::exec(const string& option)
    vector<string> tokens,target ;
    myStr2Tok(option,tokens);
 
-   if(tokens.size()>1)
+   if(!tokens.empty())
       return errorOption(CMD_OPT_EXTRA, tokens[2]);
-   else if(tokens.empty())
-      cirMgr->simulate();
-   else if(getParameter(tokens, target))
-      cirMgr->simulate(target[0]);
    else
-      return CMD_EXEC_ERROR;
+      cirMgr->simulate();
+
    return CMD_EXEC_DONE;
 }
 
 void
 SimulateCmd::usage(ostream& os) const
 {
-   os << "Usage: Simulate [ (string) pattern_name]" << endl;
+   os << "Usage: Simulate" << endl;
 }
 
 void

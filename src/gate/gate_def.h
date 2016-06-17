@@ -26,7 +26,7 @@ public:
 
    virtual bool compute_Value()      = 0;
    virtual bool fanin_add (Gate* g)  = 0;
-   virtual bool fanout_add(Gate* g)  = 0;
+   void fanout_add(Gate* g) { fanout.push_back(g); }
    
    void print_gate();
    
@@ -51,7 +51,6 @@ public:                          \
    ~T() {}                       \
    bool compute_Value();         \
    bool fanin_add(Gate* g);      \
-   bool fanout_add(Gate* g);     \
 }                                \
 
 

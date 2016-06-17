@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <stdlib.h>
 #include "cmd/cmd.h"
@@ -19,25 +20,25 @@ int main(int argc, char** argv)
 
    if(argc == 4)  // bmatch <cir1.v> <cir2.v> <match.out>
    {
-   	 //  TODO...
+     //  TODO...
 
-   	 //  Read circuit
-
-
-   	//Output
-   	if (!cmdMgr->openOutput(argv[2]))
-		{
-		  cerr << "File \""<<argv[3] <<"\" has already existed !!\n";
-		  exit(-1);
-		}
-
-		//  Auto process
+     //  Read circuit
 
 
+    //Output
+    if (!cmdMgr->openOutput(argv[2]))
+    {
+      cerr << "File \""<<argv[3] <<"\" has already existed !!\n";
+      exit(-1);
+    }
+
+    //  Auto process
 
 
-		cmdMgr->closeOutput();		
-		return 0;
+
+
+    cmdMgr->closeOutput();    
+    return 0;
    }
    else if (argc == 3)   // -File <doFile>
    {

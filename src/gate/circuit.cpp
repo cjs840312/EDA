@@ -6,6 +6,7 @@ Circuit::Circuit()
 {     
    const_list.push_back(new Const(0, "1'b0"));
    const_list.push_back(new Const(1, "1'b1"));
+   const_list[1]->setValue(true);
    name_match.insert(pair<string, Gate*>("1'b0", const_list[0] ));
    name_match.insert(pair<string, Gate*>("1'b1", const_list[1] ));
 }
@@ -27,7 +28,7 @@ Circuit::getGate(unsigned int id)
 
 void
 Circuit::printDFS(Gate* g, int level)
-{
+{   
    for(int i=0;i<level;i++)
       cout<<"  ";
    cout<<'['<<g->getType()<<"] "<<g->getID();

@@ -1,13 +1,66 @@
 #include <iostream>
+#include <sstream>
+#include <stdlib.h>
+#include <string>
 #include "CirMgr.h"
 using namespace std;
 
+static void generate_pattern(stringstream&, int) ;
+static int decide_sim_time(int);
+
 void
-CirMgr::simulate( string file_name )
+CirMgr::simulate()
 {
-// TODO...
+   stringstream patterns;
+   string pattern;
+   
+   generate_pattern(patterns,c1.in_list.size());
+
+	while(getline(patterns,pattern))
+   {
+   	c1.clearFlag(); c2.clearFlag();
+
+   	for(int i=0,psize=pattern.size(); i<psize; ++i )
+         c1.in_list[i]->setValue( (pattern[i] != '0') ); //setValue(bool x)
 
 
+   	for(int i=0,size1=c1.out_list.size(); i<size1; ++i )
+   		c1.out_list[i]->compute_Value();
 
+      for(int i=0,size2=c1.out_list.size(); i<size2; ++i )
+         c2.out_list[i]->compute_Value();    
+   }
+   
+}
 
+void generate_pattern(stringstream& ss, int n) 
+{
+   int times=decide_sim_time(n),x;
+
+   for(int t=0;t<times;t++)      // sould be 32*n  TODO...
+   {
+      for(int i=0,loop=n/30;i<loop;i++)
+      {
+         x=rand();
+         for(int j=0;j<30;j++)
+            ss<<((x>>j)%2);
+      }
+      x=rand();
+      for(int i=0,loop=n%30;i<loop;i++)
+         ss<<((x>>i)%2);
+      ss<<'\n';
+   }
+}
+
+int decide_sim_time(int input_size)
+{
+   int temp=(input_size/32+1)*32;
+   int n=0;
+   while(true)
+   {
+      if(n*n<=temp) n++;
+      else break;
+   }
+
+   return temp*(n-1);
 }

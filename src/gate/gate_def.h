@@ -14,7 +14,7 @@ friend class Circuit;
 
 public:
    Gate(string type, int id, string name="")
-   : Type(type), ID(id), Name(name), Value(false), Flag(false),history(0){}
+   : Type(type), ID(id), Name(name), Value(false), Flag(false),history(0),matched(false),vari(0){}
    virtual ~Gate(){}
 
    void setValue(bool x)  { Value =  x; }
@@ -28,7 +28,7 @@ public:
    int    getValue() const { return Value; }
    bool   getFlag()  const { return Flag;  }
    size_t getHistory() const{ return history; }
-   Var    getVar()   const { return var;   }
+   Var    getVar()   const { return vari;   }
    vector<size_t>& getHistorys(){ return historys; }
 
  
@@ -53,7 +53,9 @@ protected:
    vector<size_t> historys;
    vector<Gate*> fanin;    //This suggests the fanin  list providing pointers to gates.
    vector<Gate*> fanout;   //This suggests the fanout list providing pointers to gates.
-   Var var;
+   Var vari;
+   int real_fec,fake_fec;
+   bool matched;
 };
 
 

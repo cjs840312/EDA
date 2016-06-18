@@ -38,13 +38,12 @@ class SatSolver
 
       // Constructing proof model
       // Return the Var ID of the new Var
-      inline Var newVar() { _solver->newVar(); return _curVar++; }
+      inline Var newVar() {_solver->newVar(); return _curVar++; }
       
 
       void addAndCNF(Var vo, vector<Var> vi)
       {  
          assert(!vi.empty());
-
          int size=vi.size();
          vec<Lit> lits;
 

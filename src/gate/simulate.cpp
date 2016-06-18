@@ -21,9 +21,9 @@ CirMgr::simulate()
    generate_pattern(patterns,size1);
 
    int count=0;
+   cout<<"Total "<<size1<<" inputs"<<endl;
 	while(getline(patterns,pattern))
    {
-      pattern="000";
    	c1.clearFlag(); c2.clearFlag();
       cout<<"\rSimulating patterns : "<<count;
    	for(int i=0; i<size1; ++i )
@@ -41,41 +41,71 @@ CirMgr::simulate()
 
 void
 CirMgr::FEC()
-{
+{   
    HashMap<FEC_Key<Gate>,Gate*> FEChash(16);
    Gate *temp;
    vector<Gate*> &o1 = c1.out_list;
    vector<Gate*> &o2 = c2.out_list;
+   int n=0,m=0;
+   vector<vector<Gate*> > FECgroups;
+   vector<int> FECsizes;
 
    for(int i=0,size=o1.size();i<size;i++)
    {
       temp = o1[i];
-//      cout<<o1[i]->getHistory();
+
       if( ! FEChash.check(FEC_Key<Gate>(temp),temp)  )
       {
+         vector<Gate*> v;
+         v.push_back(temp);
          FEChash.insert(FEC_Key<Gate>(temp),temp);
+         FECgroups.push_back(v);
+         FECsizes.push_back(1);
+         temp->fake_fec=n++;
+         temp->real_fec=m++;
       }
       else
       {
-         // TODO...  sat
-         cout<<satisfy(temp,o1[i],false);
+         bool find=false;
+         for(int j=0,fs=FECsizes[temp->fake_fec];j<fs;j++)
+         {
+            temp=FECgroups[temp->fake_fec][j];
+            if(!satisfy(temp,o1[i],(o1[i]->history ^ temp->history)))
+            {
+               o1[i]->fake_fec=temp->fake_fec;
+               o1[i]->real_fec=temp->real_fec;
+               find=true;
+               break;              
+            }
+         }
+         if(!find)
+         {
+           FECgroups[temp->fake_fec].push_back(o1[i]);
+           FECsizes[temp->fake_fec]=FECsizes[temp->fake_fec]+1;           
+           o1[i]->fake_fec=temp->fake_fec;
+           o1[i]->real_fec=m++;
+         }
+         
       }
    }
-/*
    for(int i=0,size=o2.size();i<size;i++)
    {
       temp = o2[i];
-      if( ! FEChash.check(FEC_Key<Gate>(temp),temp)  )
-      {
-         FEChash.insert(FEC_Key<Gate>(temp),temp);
-      }
-      else
-      {
-         // TODO...  sat
-      }
-   }
 
-*/
+      if(FEChash.check(FEC_Key<Gate>(temp),temp)  )
+      {
+         for(int j=0,fs=FECsizes[temp->fake_fec];j<fs;j++)
+         {
+            temp=FECgroups[temp->fake_fec][j];
+            if(!satisfy(temp,o2[i],(o2[i]->history ^ temp->history)))
+            {
+               o2[i]->real_fec=temp->real_fec;
+               o2[i]->matched =true;
+               break;              
+            }
+         }       
+      }      
+   }
 
 }
 

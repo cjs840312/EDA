@@ -74,12 +74,14 @@ public:
    bool check(const HashKey& k, HashData& n) const 
    {
       size_t b = bucketNum(k);
+
       for (size_t i = 0, bn = _buckets[b].size(); i < bn; ++i)
          if (_buckets[b][i].first == k) 
          {
             n = _buckets[b][i].second;
             return true;
          }
+
       return false;
    }
 

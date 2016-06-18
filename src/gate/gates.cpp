@@ -60,14 +60,15 @@ bool Input::compute_Value()
 void Input::sat_mod(SatSolver& satsolver)
 {
    if(Flag)  return;
-
    if(!fanin.empty())
    {
       fanin[0]->sat_mod(satsolver);
-      var=fanin[0]->getVar();
+      vari=fanin[0]->getVar();
    }
    else
-      var=satsolver.newVar();
+   {
+      vari=satsolver.newVar();
+   }
 
    Flag=true;
 }
@@ -85,11 +86,11 @@ void Const::sat_mod(SatSolver& satsolver)
 {
    if(Flag)  return;
 
-   var=satsolver.newVar();
+   vari=satsolver.newVar();
    if(Value)
-      satsolver.addConst1CNF(var);
+      satsolver.addConst1CNF(vari);
    else
-      satsolver.addConst0CNF(var);
+      satsolver.addConst0CNF(vari);
    Flag=true;
 }
 
@@ -105,7 +106,7 @@ Output::fanin_add(Gate* g)
 {
 	if(fanin.size()>=1)
 	  		return false;
-   else
+  else
       fanin.push_back(g);
   	
   	return true;
@@ -130,7 +131,7 @@ void Output::sat_mod(SatSolver& satsolver)
    if(Flag)  return;
 
    fanin[0]->sat_mod(satsolver);
-   var=fanin[0]->getVar();
+   vari=fanin[0]->getVar();
    Flag=true;
 }
 
@@ -170,15 +171,17 @@ AndGate::compute_Value()
 void AndGate::sat_mod(SatSolver& satsolver)
 {
    if(Flag)  return;
-
-   var=satsolver.newVar();
+   vari=satsolver.newVar();
    vector<Var> vi;
+
    for(int i=0,size=fanin.size();i<size;i++)
    {
       fanin[i]->sat_mod(satsolver);
       vi.push_back(fanin[i]->getVar());
    }
-   satsolver.addAndCNF(var,vi);
+
+   satsolver.addAndCNF(vari,vi);
+   
    Flag=true;
 }
 
@@ -217,14 +220,14 @@ void NandGate::sat_mod(SatSolver& satsolver)
 {
    if(Flag)  return;
 
-   var=satsolver.newVar();
+   vari=satsolver.newVar();
    vector<Var> vi;
    for(int i=0,size=fanin.size();i<size;i++)
    {
       fanin[i]->sat_mod(satsolver);
       vi.push_back(fanin[i]->getVar());
    }
-   satsolver.addNandCNF(var,vi);
+   satsolver.addNandCNF(vari,vi);
    Flag=true;
 }
 //------------------------------------------------------------------------------
@@ -261,14 +264,14 @@ void OrGate::sat_mod(SatSolver& satsolver)
 {
    if(Flag)  return;
 
-   var=satsolver.newVar();
+   vari=satsolver.newVar();
    vector<Var> vi;
    for(int i=0,size=fanin.size();i<size;i++)
    {
       fanin[i]->sat_mod(satsolver);
       vi.push_back(fanin[i]->getVar());
    }
-   satsolver.addOrCNF(var,vi);
+   satsolver.addOrCNF(vari,vi);
    Flag=true;
 }
 
@@ -308,14 +311,14 @@ void NorGate::sat_mod(SatSolver& satsolver)
 {
    if(Flag)  return;
 
-   var=satsolver.newVar();
+   vari=satsolver.newVar();
    vector<Var> vi;
    for(int i=0,size=fanin.size();i<size;i++)
    {
       fanin[i]->sat_mod(satsolver);
       vi.push_back(fanin[i]->getVar());
    }
-   satsolver.addNorCNF(var,vi);
+   satsolver.addNorCNF(vari,vi);
    Flag=true;
 }
 
@@ -356,12 +359,12 @@ void XorGate::sat_mod(SatSolver& satsolver)
 {
    if(Flag)  return;
 
-   var=satsolver.newVar();
+   vari=satsolver.newVar();
    
    fanin[0]->sat_mod(satsolver);
    fanin[1]->sat_mod(satsolver);
 
-   satsolver.addXorCNF(var,fanin[0]->getVar(),fanin[1]->getVar());
+   satsolver.addXorCNF(vari,fanin[0]->getVar(),fanin[1]->getVar());
    Flag=true;
 }
 
@@ -402,12 +405,12 @@ void XnorGate::sat_mod(SatSolver& satsolver)
 {
    if(Flag)  return;
 
-   var=satsolver.newVar();
+   vari=satsolver.newVar();
    
    fanin[0]->sat_mod(satsolver);
    fanin[1]->sat_mod(satsolver);
 
-   satsolver.addXnorCNF(var,fanin[0]->getVar(),fanin[1]->getVar());
+   satsolver.addXnorCNF(vari,fanin[0]->getVar(),fanin[1]->getVar());
    Flag=true;
 }
 
@@ -448,11 +451,11 @@ void NotGate::sat_mod(SatSolver& satsolver)
 {
    if(Flag)  return;
 
-   var=satsolver.newVar();
+   vari=satsolver.newVar();
    
    fanin[0]->sat_mod(satsolver);
 
-   satsolver.addNotCNF(var,fanin[0]->getVar());
+   satsolver.addNotCNF(vari,fanin[0]->getVar());
    Flag=true;
 }
 
@@ -492,7 +495,7 @@ void Wire::sat_mod(SatSolver& satsolver)
 
    fanin[0]->sat_mod(satsolver);
 
-   var=fanin[0]->getVar();
+   vari=fanin[0]->getVar();
    Flag=true;
 }
 
@@ -533,6 +536,6 @@ void Buffer::sat_mod(SatSolver& satsolver)
 
    fanin[0]->sat_mod(satsolver);
 
-   var=fanin[0]->getVar();
+   vari=fanin[0]->getVar();
    Flag=true;
 }

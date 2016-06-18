@@ -146,6 +146,7 @@ void generate_pattern(stringstream& ss, int n)
 
 int decide_sim_time(int input_size)
 {
+	/*
    int n=0;
    while(true)
    {
@@ -154,7 +155,8 @@ int decide_sim_time(int input_size)
    }
    n--;
    n=n*input_size;
-
+*/
+   int n=input_size*10;
    n=((n-1)/history_unit+1)*history_unit;
 
    return n;

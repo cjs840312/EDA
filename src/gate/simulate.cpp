@@ -17,11 +17,10 @@ CirMgr::simulate()
    stringstream patterns;
    string pattern;
 
-   int size1=c1.in_list.size();
+   int size1=c1.in_list.size();   
    generate_pattern(patterns,size1);
-
    int count=0;
-   cout<<"Total "<<size1<<" inputs"<<endl;
+
 	while(getline(patterns,pattern))
    {
    	c1.clearFlag(); c2.clearFlag();
@@ -107,11 +106,28 @@ CirMgr::FEC()
       }      
    }
 
+   cout<<"Circuit 1 :"<<endl;
+   for(int i=0,size=o1.size();i<size;i++)
+      cout<<i<<' '<<o1[i]->real_fec<<endl;
+
+   cout<<endl;
+
+   cout<<"Circuit 2 :"<<endl;
+   for(int i=0,size=o2.size();i<size;i++)
+   {
+      if(o2[i]->matched)
+         cout<<i<<' '<<o2[i]->real_fec<<endl;
+   }
+
 }
 
 void generate_pattern(stringstream& ss, int n) 
 {
    int times=decide_sim_time(n),x;
+
+   cout<<"Total "<<n<<" inputs"<<endl;
+   cout<<"Attempt to simulate "<<times<<" times"<<endl;
+
 
    for(int t=0;t<times;t++)      // sould be 32*n  TODO...
    {

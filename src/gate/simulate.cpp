@@ -119,6 +119,7 @@ CirMgr::FEC()
          cout<<i<<' '<<o2[i]->real_fec<<endl;
    }
 
+   pairs();
 }
 
 void generate_pattern(stringstream& ss, int n) 

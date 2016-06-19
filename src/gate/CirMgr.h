@@ -54,6 +54,7 @@ public:
    void match();
    void FEC();
    bool satisfy(Gate*, Gate*, bool);
+   void pairs();
 
 private:
    void gate_parse(vector<string>& , vector<Gate*>& , Gate* , Circuit&);

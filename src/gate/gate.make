@@ -1,6 +1,6 @@
 all : ../../lib/libGate.a
 
-../../lib/libGate.a : ../../obj/gates.o ../../obj/cmdGate.o ../../obj/parse.o ../../obj/circuit.o ../../obj/optimize.o ../../obj/simulate.o ../../obj/match.o ../../obj/sat.o
+../../lib/libGate.a : ../../obj/gates.o ../../obj/cmdGate.o ../../obj/parse.o ../../obj/circuit.o ../../obj/optimize.o ../../obj/simulate.o ../../obj/match.o ../../obj/sat.o ../../obj/pairs.o
 	echo -n " > making library libCmd.a ...     "
 	ar -rcs $@ $^
 	echo "Success !!\n"
@@ -42,5 +42,10 @@ all : ../../lib/libGate.a
 
 ../../obj/sat.o : sat.cpp CirMgr.h ../sat/sat.h
 	echo -n " > compilng sat.cpp ...            "
+	g++ -c $< -o $@
+	echo "Success !!"
+
+../../obj/pairs.o : pairs.cpp CirMgr.h
+	echo -n " > compilng pairs.cpp ...           "
 	g++ -c $< -o $@
 	echo "Success !!"

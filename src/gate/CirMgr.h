@@ -17,6 +17,8 @@ public:
 
    Gate* getGate(unsigned int);
    void printDFS(Gate*,int);
+   int name2index(string);
+   void traceBack(Gate*, vector<vector<pair<string, bool> > > & , int &, string,  bool &);
    void buildgate_list();
    void removeList(vector<Gate*>&);
    void clearFlag();

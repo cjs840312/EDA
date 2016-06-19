@@ -61,6 +61,275 @@ Circuit::printDFS(Gate* g, int level)
    g->setFlag(true);
 }
 
+
+void
+Circuit::traceBack(Gate* g, vector<vector<pair<string, bool> > > & sequence, int & No, string OutputName, bool & x_existence)
+{   
+	cout<<"No: "<<No<<endl;
+	/*
+	for(int i = 0; i < sequence[No].size(); i++){		
+			cout<<sequence[No][i].second;
+	}
+	*/
+	cout<<'['<<g->getType()<<"] "<<g->getID();
+	if(g->getName()!=""){
+		cout<<'('<<g->getName()<<')';
+	}
+	cout<<endl<<endl;
+	
+	
+	if(g->getType() == "Input"){
+		for(int i = 0; i < sequence[No].size(); i++){
+			sequence[No][i].first = g->getName();
+		}
+		
+		return;
+	}
+	else if(g->getType() == "Output"){
+				
+		vector<Gate*>& list=g->fanin_get();
+		vector<Gate*>& list2=g->fanout_get();
+		int size = list2.size();
+		if(size > 0){
+			
+			if(OutputName == g->getName()){
+				vector<pair<string, bool> > branch;
+				sequence.push_back(branch);
+				traceBack(list[0], sequence, No, OutputName, x_existence);
+			}
+			else{
+				traceBack(list[0], sequence, No, OutputName, x_existence);
+			}
+			
+		}
+		else{
+			vector<pair<string, bool> > branch;
+			sequence.push_back(branch);
+			traceBack(list[0], sequence, No, OutputName, x_existence);
+		}
+		g->setFlag(true);
+			
+	}
+	else{
+		pair<string, bool> p0("", 0);
+		pair<string, bool> p1("", 1);
+		if(g->getType() == "AndGate"){
+			
+			sequence[No].push_back(p1);	
+			
+			vector<Gate*>& list=g->fanin_get();
+			int size = list.size();
+			int currentSize = sequence[No].size();
+			for(int i=0;i<size;i++)
+			{			
+					if(i == 0){
+						traceBack(list[i], sequence, No, OutputName, x_existence);
+					}
+					else{
+						vector<pair<string, bool> > branch;
+						for(int j = 0; j<currentSize; j++){
+							pair<string, bool> temp(sequence[No][j]);
+							branch.push_back(temp);
+						}
+						sequence.push_back(branch);
+						No++;
+						traceBack(list[i], sequence, No, OutputName, x_existence);						
+					}					
+			}			
+		}
+		else if(g->getType() == "NandGate"){
+			if(sequence[No].size()!=0){
+				if(!sequence[No][sequence[No].size()-1].second){
+					sequence[No].pop_back();
+					sequence[No].push_back(p1);
+				}
+				else{
+					sequence[No].push_back(p0);
+					sequence[No].push_back(p1);
+				}
+			}
+			else{
+				sequence[No].push_back(p0);
+				sequence[No].push_back(p1);
+			}
+			
+			
+			vector<Gate*>& list=g->fanin_get();
+			int size = list.size();
+			int currentSize = sequence[No].size();
+			for(int i=0;i<size;i++)
+			{			
+					if(i == 0){
+						traceBack(list[i], sequence, No, OutputName, x_existence);
+					}
+					else{
+						vector<pair<string, bool> > branch;
+						for(int j = 0; j<currentSize; j++){
+							pair<string, bool> temp(sequence[No][j]);
+							branch.push_back(temp);
+						}
+						sequence.push_back(branch);
+						No++;
+						traceBack(list[i], sequence, No, OutputName, x_existence);						
+					}					
+			}
+			
+		}
+		else if(g->getType() == "OrGate"){
+			if(sequence[No].size()!=0){
+				if(!sequence[No][sequence[No].size()-1].second){
+					sequence[No].pop_back();
+					sequence[No].push_back(p1);
+					sequence[No].push_back(p0);
+				}
+				else{
+					sequence[No].push_back(p0);
+					sequence[No].push_back(p1);
+					sequence[No].push_back(p0);
+				}
+			}
+			else{
+				sequence[No].push_back(p0);
+				sequence[No].push_back(p1);
+				sequence[No].push_back(p0);
+			}
+			
+			vector<Gate*>& list=g->fanin_get();
+			int size = list.size();
+			int currentSize = sequence[No].size();
+			for(int i=0;i<size;i++)
+			{
+				
+					if(i == 0){
+						traceBack(list[i], sequence, No, OutputName, x_existence);
+						//cout<<"No: "<<No<<endl;
+					}
+					else{
+						vector<pair<string, bool> > branch;
+						for(int j = 0; j<currentSize; j++){
+							pair<string, bool> temp(sequence[No][j]);
+							branch.push_back(temp);
+						}
+						sequence.push_back(branch);
+						No++;
+						traceBack(list[i], sequence, No, OutputName, x_existence);
+						//cout<<"No: "<<No<<endl;
+					}
+					
+				
+					
+			}
+			
+		}
+		else if(g->getType() == "NorGate"){
+			sequence[No].push_back(p1);
+			sequence[No].push_back(p0);
+	
+		}
+		
+		else if(g->getType() == "XorGate"){
+			x_existence = 1;
+			if(sequence[No].size()!=0){
+				if(!sequence[No][sequence[No].size()-1].second){
+					sequence[No].pop_back();
+					sequence[No].push_back(p1);
+					sequence[No].push_back(p0);
+					sequence[No].push_back(p1);
+				}
+				else{
+					sequence[No].push_back(p0);
+					sequence[No].push_back(p1);
+					sequence[No].push_back(p0);
+					sequence[No].push_back(p1);
+				}
+			}
+			else{
+				sequence[No].push_back(p0);
+				sequence[No].push_back(p1);
+				sequence[No].push_back(p0);
+				sequence[No].push_back(p1);
+			}
+			vector<Gate*>& list=g->fanin_get();
+			int size = list.size();
+			int currentSize = sequence[No].size();
+			for(int i=0;i<size;i++)
+			{
+					if(i == 0){
+						traceBack(list[i], sequence, No, OutputName, x_existence);
+						
+						vector<pair<string, bool> > branch;
+						for(int j = 0; j<currentSize; j++){
+							pair<string, bool> temp(sequence[No][j]);
+							branch.push_back(temp);
+						}
+						branch.push_back(p0);
+						sequence.push_back(branch);
+						No++;
+						traceBack(list[i], sequence, No, OutputName, x_existence);
+					}
+					else{
+						vector<pair<string, bool> > branch;
+						for(int j = 0; j<currentSize; j++){
+							pair<string, bool> temp(sequence[No][j]);
+							branch.push_back(temp);
+						}
+						sequence.push_back(branch);
+						No++;
+						traceBack(list[i], sequence, No, OutputName, x_existence);
+						
+						branch.push_back(p0);
+						sequence.push_back(branch);
+						No++;
+						traceBack(list[i], sequence, No, OutputName, x_existence);
+						//cout<<"No: "<<No<<endl;
+					}
+							
+			}
+			
+		}
+		else if(g->getType() == "XnorGate"){
+			x_existence = 1;
+			sequence[No].push_back(p1);
+			sequence[No].push_back(p0);
+			sequence[No].push_back(p1);
+			
+		}
+			
+		else if(g->getType() == "NotGate"){
+			if(sequence[No].size()!=0){
+				if(!sequence[No][sequence[No].size()-1].second){
+					sequence[No].pop_back();
+					
+				}
+				else{
+					sequence[No].push_back(p0);
+					
+				}
+			}
+			else{
+				sequence[No].push_back(p0);
+				
+			}
+					
+			vector<Gate*>& list=g->fanin_get();
+			traceBack(list[0], sequence, No, OutputName, x_existence);
+			
+		
+		}
+		else{
+			cout<<"error!!!"<<endl;
+		}
+	}
+}
+int 
+Circuit::name2index(string s){
+	for(int i = 0; i < in_list.size(); i++){
+		if(in_list[i]->getName()== s){
+			return i;
+			break;
+		}
+	}
+}
 void
 Circuit::clearFlag()
 {

@@ -5,7 +5,7 @@ Please use UNIX environment to run the program
 
 0.  To excute the program :
     
-    `bin/bmatch`
+    `./bin/bmatch`
  
 ------------------------------------------------------------------- 
 in the program :

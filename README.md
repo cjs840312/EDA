@@ -3,9 +3,9 @@ final project and compititon for EDA
 
 Please use UNIX environment to run the program
 
-0.To excute the program :
+0.  To excute the program :
     
-    `bin/bmatch`
+    bin/bmatch
  
 ------------------------------------------------------------------- 
 in the program :

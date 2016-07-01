@@ -27,12 +27,21 @@ in the program :
 Detailed function:
 
   DOfile    : execute the commands in the dofile
+  
   FECgroup  : find the Functionally Equivalent Candidate group
+  
   HELp      : print this help message
+  
   HIStory   : print command history
+  
   Match     : match the inputs 
+  
   Print     : print the DFS list of the circuit(s) 
+  
   Quit      : quit the execution
+  
   Read      : read and parse input file 
+  
   Simulate  : find the outputs that might be in the same group
+  
   Usage     : show time and memory usage

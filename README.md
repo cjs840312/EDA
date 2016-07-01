@@ -5,25 +5,23 @@ Please use UNIX environment to run the program
 
 0.To excute the program :
     
-    bin/bmatch
+    `bin/bmatch`
  
 ------------------------------------------------------------------- 
 in the program :
   
 1.  Read input file :
-  
-    ex:
-      read case0/cir1.v case0/cir2.v
+      `read case0/cir1.v case0/cir2.v`
  
 2.  To do without set any option please type following command :
      
-      match
-      simulate
-      FECgroup  
+      `match`
+      `simulate`
+      `FECgroup`  
       
 3. To exit the program :
        
-       quit -f
+       `quit -f`
        
 -------------------------------------------------------------------
 Detailed function:

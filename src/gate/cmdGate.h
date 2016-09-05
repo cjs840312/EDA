@@ -5,9 +5,9 @@
 
 CmdClass(ReadCmd);
 CmdClass(PrintCmd);
-CmdClass(OptimizeCmd);
 CmdClass(SimulateCmd);
 CmdClass(MatchCmd);
 CmdClass(FECgroupCmd);
+CmdClass(GOCmd);
 
 #endif 

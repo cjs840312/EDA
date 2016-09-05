@@ -82,7 +82,7 @@ CirMgr::parse( ifstream& cirfile, int num)
 			case NOT:	 gate_parse(tokens, cir.Not_list,  new NotGate (gatecount++), cir); break;
 			case AND:	 gate_parse(tokens, cir.And_list,  new AndGate (gatecount++), cir); break;
 			case NAND:	 gate_parse(tokens, cir.Nand_list, new NandGate(gatecount++), cir); break;
-			case OR:		 gate_parse(tokens, cir.Or_list,   new OrGate  (gatecount++), cir); break;
+			case OR:     gate_parse(tokens, cir.Or_list,   new OrGate  (gatecount++), cir); break;
 			case NOR:	 gate_parse(tokens, cir.Nor_list,  new NorGate (gatecount++), cir); break;
 			case XOR:	 gate_parse(tokens, cir.Xor_list,  new XorGate (gatecount++), cir); break;
 			case XNOR: 	 gate_parse(tokens, cir.Xnor_list, new XnorGate(gatecount++), cir); break;
@@ -91,11 +91,12 @@ CirMgr::parse( ifstream& cirfile, int num)
 		}
 	}
 
+	
 	cirfile.close();	
 	cir.removeList(cir.Wire_list);
 	cir.removeList(cir.Buff_list);
-
-   return true;
+	
+    return true;
 }
 
 void CirMgr::gate_parse(vector<string>& tokens, vector<Gate*>& gate_list,  Gate* gate, Circuit& cir)

@@ -30,6 +30,19 @@ Gate::print_gate()
 
 }
 
+void
+Gate::back_flag(int n)
+{
+  if(Flag) return;
+
+  for(int i=0,size=fanin.size();i<size;i++)
+   {
+      fanin[i]->back_flag(n);
+      for(int j=0;j<n;j++)
+         in_flags[j] = in_flags[j] || fanin[i]->in_flags[j];
+   }
+   Flag = true;
+}
 
 //------------------------------------------------------------------------------
 //    Input
@@ -39,22 +52,22 @@ Input::Input(int id, string name):Gate( "Input" , id, name ) {}
 
 bool Input::fanin_add(Gate* g)
 {
-	if(fanin.size()>=1)
-	  		return false;
+  if(fanin.size()>=1)
+        return false;
    else
       fanin.push_back(g);
-  	
-  	return true;
+    
+    return true;
 }
 
-bool Input::compute_Value()
+unsigned Input::compute_Value()
 {
-	if( !Flag && !fanin.empty())
-	{
-		Value = fanin[0]->compute_Value();
-		Flag = true;
-	}
-	return Value ; 
+  if( !Flag && !fanin.empty())
+  {
+    Value = fanin[0]->compute_Value();
+    Flag = true;
+  }
+  return Value ; 
 }
 
 void Input::sat_mod(SatSolver& satsolver)
@@ -72,6 +85,20 @@ void Input::sat_mod(SatSolver& satsolver)
 
    Flag=true;
 }
+/*
+bool Input::pass_dominate(bool phase)
+{
+   if(phase)
+      dominate_1=true;
+   else
+      dominate_0=true;
+   
+
+
+
+
+}
+*/
 //------------------------------------------------------------------------------
 //    Const
 //------------------------------------------------------------------------------
@@ -80,7 +107,7 @@ Const::Const(int id, string name):Gate( "Const" , id, name ) {}
 
 bool Const::fanin_add(Gate* g) { return false; }
 
-bool Const::compute_Value() { return Value ; }
+unsigned Const::compute_Value() { return Value ; }
 
 void Const::sat_mod(SatSolver& satsolver)
 {
@@ -104,32 +131,31 @@ Output::Output(int id, string name):Gate( "Output" , id, name ) {}
 bool
 Output::fanin_add(Gate* g)
 {
-	if(fanin.size()>=1)
-	  		return false;
+  if(fanin.size()>=1)
+        return false;
   else
       fanin.push_back(g);
-  	
-  	return true;
+    
+    return true;
 }
 
-bool
+unsigned
 Output::compute_Value()
 {
-	assert(!fanin.empty()) ;
+  assert(!fanin.empty()) ;
 
-	if(!Flag)	
-	{
-		Value = fanin[0]->compute_Value();
-		Flag = true;
-	}
+  if(!Flag) 
+  {
+    Value = fanin[0]->compute_Value();
+    Flag = true;
+  }
 
-	return Value;
+  return Value;
 }
 
 void Output::sat_mod(SatSolver& satsolver)
 {
    if(Flag)  return;
-
    fanin[0]->sat_mod(satsolver);
    vari=fanin[0]->getVar();
    Flag=true;
@@ -144,27 +170,27 @@ AndGate::AndGate(int id, string name):Gate( "AndGate" , id, name ) {}
 bool
 AndGate::fanin_add(Gate* g)
 {
-	fanin.push_back(g);
-	return true;
+  fanin.push_back(g);
+  return true;
 }
 
-bool
+unsigned
 AndGate::compute_Value()
 { 
-	int size=fanin.size();
-	assert(size >= 2);
+  int size=fanin.size();
+  assert(size >= 2);
 
 
-	if(Flag)
-		return Value;
+  if(Flag)
+    return Value;
 
-	Value =true;
-	for(int i=0 ; i < size ; i++)
-	{
-		Value = Value && fanin[i]->compute_Value();
-	}
+  Value =-1;
+  for(int i=0 ; i < size ; i++)
+  {
+    Value = Value & fanin[i]->compute_Value();
+  }
 
-	Flag = true;
+  Flag = true;
     return Value;
 }
 
@@ -194,25 +220,25 @@ NandGate::NandGate(int id, string name):Gate( "NandGate" , id, name ) {}
 bool
 NandGate::fanin_add(Gate* g)
 {
-	fanin.push_back(g);
-	return true;
+  fanin.push_back(g);
+  return true;
 }
 
-bool
+unsigned
 NandGate::compute_Value()
 {
-	int size=fanin.size();
-	assert(size >= 2);
+  int size=fanin.size();
+  assert(size >= 2);
 
-	if(Flag)
-		return Value;
+  if(Flag)
+    return Value;
 
-	Value = true;
-	for(int i=0 ; i < size ; i++)
-		Value = Value && fanin[i]->compute_Value();
-	Value = !Value;
+  Value = -1;
+  for(int i=0 ; i < size ; i++)
+    Value = Value & fanin[i]->compute_Value();
+  Value = ~Value;
 
-	Flag = true;
+  Flag = true;
     return Value;
 }
 
@@ -230,6 +256,7 @@ void NandGate::sat_mod(SatSolver& satsolver)
    satsolver.addNandCNF(vari,vi);
    Flag=true;
 }
+
 //------------------------------------------------------------------------------
 //    OrGate
 //------------------------------------------------------------------------------
@@ -240,23 +267,23 @@ bool
 OrGate::fanin_add(Gate* g)
 {
    fanin.push_back(g);
-	return true;
+  return true;
 }
 
-bool
+unsigned
 OrGate::compute_Value()
 {
-	int size=fanin.size();
-	assert(size >= 2 );
+  int size=fanin.size();
+  assert(size >= 2 );
 
-	if(Flag)
-		return Value;
+  if(Flag)
+    return Value;
 
-	Value = false;
-	for(int i=0 ; i < size ; i++)
-		Value = Value || fanin[i]->compute_Value();
-	
-	Flag = true;
+  Value = 0;
+  for(int i=0 ; i < size ; i++)
+    Value = Value | fanin[i]->compute_Value();
+  
+  Flag = true;
     return Value;
 }
 
@@ -285,26 +312,26 @@ bool
 NorGate::fanin_add(Gate* g)
 {
    fanin.push_back(g);
-	return true;
+  return true;
 }
 
-bool
+unsigned
 NorGate::compute_Value()
 {
-	int size=fanin.size();
-	assert(size >=2);
+  int size=fanin.size();
+  assert(size >=2);
 
-	if(Flag)
-		return Value;
+  if(Flag)
+    return Value;
 
-	Value = false;
-	for(int i=0 ; i < size ; i++)
-		Value = Value || fanin[i]->compute_Value();
+  Value = 0;
+  for(int i=0 ; i < size ; i++)
+    Value = Value | fanin[i]->compute_Value();
 
-	Value = !Value;
+  Value = ~Value;
 
-	Flag = true;
-   	return Value;
+  Flag = true;
+    return Value;
 }
 
 void NorGate::sat_mod(SatSolver& satsolver)
@@ -322,6 +349,7 @@ void NorGate::sat_mod(SatSolver& satsolver)
    Flag=true;
 }
 
+
 //------------------------------------------------------------------------------
 //    XorGate
 //------------------------------------------------------------------------------
@@ -331,27 +359,27 @@ XorGate::XorGate(int id, string name):Gate( "XorGate" , id, name ) {}
 bool
 XorGate::fanin_add(Gate* g)
 {
-	if(fanin.size() >= 2)
- 		return false;
-	else
+  if(fanin.size() >= 2)
+    return false;
+  else
       fanin.push_back(g);
 
     return true;
 }
 
-bool
+unsigned
 XorGate::compute_Value()
 {
-	int size=fanin.size();
-	assert (size == 2);
+  int size=fanin.size();
+  assert (size == 2);
 
-	if(Flag)
-		return Value;
+  if(Flag)
+    return Value;
 
-	Value = fanin[0]->compute_Value() ^ fanin[1]->compute_Value();
+  Value = fanin[0]->compute_Value() ^ fanin[1]->compute_Value();
 
    
-	Flag = true;
+  Flag = true;
    return Value;
 }
 
@@ -377,27 +405,27 @@ XnorGate::XnorGate(int id, string name):Gate( "XnorGate" , id, name ) {}
 bool
 XnorGate::fanin_add(Gate* g)
 {
-	if(fanin.size() >= 2)
- 		return false;
-	else
+  if(fanin.size() >= 2)
+    return false;
+  else
       fanin.push_back(g);
 
    return true;
 }
 
-bool
+unsigned
 XnorGate::compute_Value()
 {
-	int size=fanin.size();
-	assert(size == 2);
+  int size=fanin.size();
+  assert(size == 2);
 
-	if(Flag)
-		return Value;
+  if(Flag)
+    return Value;
 
-	Value = fanin[0]->compute_Value() ^ fanin[1]->compute_Value();
+  Value = fanin[0]->compute_Value() ^ fanin[1]->compute_Value();
 
-	Value = !Value;
-	Flag = true;
+  Value = ~Value;
+  Flag = true;
     return Value;
 }
 
@@ -423,38 +451,36 @@ NotGate::NotGate(int id, string name):Gate( "NotGate" , id, name ) {}
 bool
 NotGate::fanin_add(Gate* g)
 {
-	if(fanin.size() >=1)
- 		return false;
-	else
+  if(fanin.size() >=1)
+    return false;
+  else
       fanin.push_back(g);
 
    return true;
 }
 
 
-bool
+unsigned
 NotGate::compute_Value()
 { 
-	int size=fanin.size();
-	assert(size == 1);
+  int size=fanin.size();
+  assert(size == 1);
 
-	if(Flag)
-		return Value;
+  if(Flag)
+    return Value;
 
-	Value = !(fanin[0]->compute_Value());
+  Value = ~(fanin[0]->compute_Value());
 
-	Flag = true;
+  Flag = true;
     return Value;
 }
 
 void NotGate::sat_mod(SatSolver& satsolver)
 {
-   if(Flag)  return;
+   if(Flag)  return; 
 
    vari=satsolver.newVar();
-   
    fanin[0]->sat_mod(satsolver);
-
    satsolver.addNotCNF(vari,fanin[0]->getVar());
    Flag=true;
 }
@@ -468,24 +494,24 @@ Wire::Wire(int id, string name):Gate( "Wire" , id, name ) {}
 bool
 Wire::fanin_add(Gate* g) 
 {
-	if(fanin.size()>=1)
-		return false;
+  if(fanin.size()>=1)
+    return false;
 
    fanin.push_back(g);
    return true;
 }
 
-bool 
+unsigned
 Wire::compute_Value()
 {
-	assert(fanin.size()==1);
+  assert(fanin.size()==1);
 
-	if(Flag)
-		return Value;
+  if(Flag)
+    return Value;
 
-  	Value = fanin[0]->compute_Value();
+    Value = fanin[0]->compute_Value();
 
-  	Flag = true;
+    Flag = true;
     return Value;
 }
 
@@ -508,25 +534,24 @@ Buffer::Buffer(int id, string name):Gate( "Buffer" , id, name ) {}
 bool
 Buffer::fanin_add(Gate* g) 
 {
-	if(fanin.size()>=1)
-		return false;
-	
+  if(fanin.size()>=1)
+    return false;
+  
    fanin.push_back(g);
    return true;
 }
 
-bool
-
+unsigned
 Buffer::compute_Value()
 {
-	assert(fanin.size()==1);
+  assert(fanin.size()==1);
  
-	if(Flag)
-		return Value;
+  if(Flag)
+    return Value;
 
-  	Value = fanin[0]->compute_Value();
+    Value = fanin[0]->compute_Value();
 
-  	Flag = true;
+    Flag = true;
     return Value;
 }
 

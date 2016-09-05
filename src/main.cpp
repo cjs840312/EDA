@@ -20,24 +20,42 @@ int main(int argc, char** argv)
 
    if(argc == 4)  // bmatch <cir1.v> <cir2.v> <match.out>
    {
-     //  TODO...
-
      //  Read circuit
 
+      cirMgr= new CirMgr();
+      
+      ifstream fin1( argv[1]);
+      if( !fin1.is_open() || !cirMgr->parse(fin1,1))
+      {
+         cout<<"Read input file 1 \""<<argv[1]<<"\" failed" << endl;
+         return 1;
+      }
+      
+      cout << "Read input file 1 \""<<argv[1]<<"\" successfully" << endl;
+
+      ifstream fin2( argv[2]);
+      if( !fin2.is_open() || !cirMgr->parse(fin2,2))
+      {
+         cout<<"Read input file 2 \""<<argv[2]<<"\" failed" << endl;
+         return 1;
+      }
+
+      cout << "Read input file 2 \""<<argv[2]<<"\" successfully" << endl;
+
+      cirMgr->set_output(string(argv[3]));
+      cirMgr->GO();
+
+      
 
     //Output
+    /*
     if (!cmdMgr->openOutput(argv[2]))
     {
       cerr << "File \""<<argv[3] <<"\" has already existed !!\n";
       exit(-1);
     }
-
-    //  Auto process
-
-
-
-
     cmdMgr->closeOutput();    
+    */
     return 0;
    }
    else if (argc == 3)   // -File <doFile>

@@ -11,11 +11,11 @@ class FEC_Key
 public:
    FEC_Key(Gate* g):gate(g){}
 
-   size_t operator() () const
+   unsigned operator() () const
    {
-      size_t temp=gate->getHistory();
+      unsigned temp=gate->getHistory();
       if(temp%2==1)
-         temp^=1;
+         temp=~temp;
       return temp;
    }
 
@@ -23,9 +23,9 @@ public:
    {
 
       bool b=true,b0=true,b1=true,b00,b11;
-      size_t result;
-      vector<size_t>& h1 = gate->getHistorys();
-      vector<size_t>& h2 = k.gate->getHistorys();
+      unsigned result;
+      vector<unsigned>& h1 = gate->getHistorys();
+      vector<unsigned>& h2 = k.gate->getHistorys();
 
       for(int i=0,size=h1.size();i<size;i++)
       {

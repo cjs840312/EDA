@@ -14,48 +14,52 @@ friend class Circuit;
 
 public:
    Gate(string type, int id, string name="")
-   : Type(type), ID(id), Name(name), Value(false), Flag(false),history(0),matched(false),vari(0){}
+   : Type(type), ID(id), Name(name), Value(-1), Flag(false),history(0),matched(0),vari(0),dominate_0(false),dominate_1(false){}
    virtual ~Gate(){}
 
-   void setValue(bool x)  { Value =  x; }
+   void setValue(unsigned x)  { Value =  x; }
    void setFlag (bool x)  { Flag  =  x; }
-   void setHistory() { history = history*2 + Value;}
+   void setHistory() { history = Value;}
    void setHistorys(){ historys.push_back(history);}
 
-   string getType()  const { return Type;  }
-   int    getID()    const { return ID;    }
-   string getName()  const { return Name;  }
-   int    getValue() const { return Value; }
-   bool   getFlag()  const { return Flag;  }
-   size_t getHistory() const{ return history; }
-   Var    getVar()   const { return vari;   }
-   vector<size_t>& getHistorys(){ return historys; }
-
+   string            getType()      const {   return Type;    }
+   int               getID()        const {   return ID;      }
+   string            getName()      const {   return Name;    }
+   unsigned          getValue()     const {   return Value;   }
+   bool              getFlag()      const {   return Flag;    }
+   unsigned          getHistory()   const {   return history; }
+   Var               getVar()       const {   return vari;    }
+   vector<unsigned>& getHistorys()        {   return historys; }
+   int               getmatched()   const {     return matched;}
  
    vector<Gate*>& fanin_get() { return fanin ;}  // Please don't use push_back()
    vector<Gate*>& fanout_get(){ return fanout;}  // Use fanxx_add instead
 
-   virtual bool compute_Value()      = 0;
+   virtual unsigned compute_Value()  = 0;
    virtual bool fanin_add (Gate* g)  = 0;
    virtual void sat_mod(SatSolver&)  = 0;
+   //virtual bool pass_dominate(bool ) = 0;
+   void back_flag(int);
    void fanout_add(Gate* g) { fanout.push_back(g); }
 
    void print_gate();
+   void relate_merge(int* ,int );
    
 protected:
-
    string Type;            //Type of a gate
    int ID;                 //This inplies the fanout wire number
    string Name;
-   bool Value;             //This suggests the value of the output.
+   unsigned Value;             //This suggests the value of the output.
    bool Flag;
-   size_t history;
-   vector<size_t> historys;
+   unsigned history;
+   vector<unsigned> historys;
    vector<Gate*> fanin;    //This suggests the fanin  list providing pointers to gates.
    vector<Gate*> fanout;   //This suggests the fanout list providing pointers to gates.
    Var vari;
    int real_fec,fake_fec;
-   bool matched;
+   int matched;
+   bool* in_flags;
+   bool dominate_0,dominate_1;
 };
 
 
@@ -65,11 +69,12 @@ class T: public Gate             \
 public:                          \
    T(int,string="");             \
    ~T() {}                       \
-   bool compute_Value();         \
+   unsigned compute_Value();     \
    bool fanin_add(Gate*);        \
    void sat_mod(SatSolver&);     \
 }                                \
 
+//   bool pass_dominate(bool );
 
 GateClass(   Input   );
 GateClass(  Output   );

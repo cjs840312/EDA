@@ -1,24 +1,24 @@
 all : dir bin/bmatch
-	@echo "Compile complete !!\n"
+	@echo "Compile complete !!"
 
 dir :
-	@echo    "checking directories ...\n"
+	@echo    "checking directories ..."
 	@mkdir -p bin obj lib output
 
 bin/bmatch : library obj/main.o obj/help_function.o
 	@echo -n " > linking object file ...         "
-	@g++  -o $@ obj/main.o obj/help_function.o -Llib -lGate -lCmd -lSat
-	@echo "Success !!\n"
+	@g++ -O3  -o $@ obj/main.o obj/help_function.o -Llib -lGate -lCmd -lSat
+	@echo "Success !!"
 
 obj/main.o : src/main.cpp src/cmd/cmd.h src/util/help_function.h src/util/myUsage.h src/gate/CirMgr.h
 	@echo -n " > compilng main.cpp ...           "
-	@g++ -c $< -o $@
+	@g++ -O3 -c $< -o $@
 	@echo "Success !!"
 
 
 obj/help_function.o : src/util/help_function.cpp 
 	@echo -n " > compilng help_function.cpp ...  "
-	@g++ -c $< -o $@
+	@g++ -O3 -c $< -o $@
 	@echo "Success !!"
 
 library :

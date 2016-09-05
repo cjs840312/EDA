@@ -14,33 +14,23 @@ static int decide_sim_time(int);
 void
 CirMgr::simulate()
 {
-   stringstream patterns;
-   string pattern;
-
    int size1=c1.in_list.size();   
-   generate_pattern(patterns,size1);
-   int count=0;
 
-	while(getline(patterns,pattern))
-   {
-   	c1.clearFlag(); c2.clearFlag();
-      cout<<"\rSimulating patterns : "<<count;
-   	for(int i=0; i<size1; ++i )
-         c1.in_list[i]->setValue( (pattern[i] != '0') ); 
+   c1.his_clear();  c2.his_clear();
 
-   	c1.simulate();
-      c2.simulate();
-      if(++count%64 == 0)
-      {
-         c1.his_push();
-         c2.his_push();
-      }
-   }
+  	c1.clearFlag();  c2.clearFlag();
+      
+	for(int i=0; i<size1; ++i )
+      c1.in_list[i]->setValue( rand() ); 
+
+	c1.simulate();   c2.simulate();
+   c1.his_push();   c2.his_push();
 }
 
 void
 CirMgr::FEC()
-{   
+{  
+ 
    HashMap<FEC_Key<Gate>,Gate*> FEChash(16);
    Gate *temp;
    vector<Gate*> &o1 = c1.out_list;
@@ -52,7 +42,7 @@ CirMgr::FEC()
    for(int i=0,size=o1.size();i<size;i++)
    {
       temp = o1[i];
-
+      temp->matched=0;
       if( ! FEChash.check(FEC_Key<Gate>(temp),temp)  )
       {
          vector<Gate*> v;
@@ -62,6 +52,7 @@ CirMgr::FEC()
          FECsizes.push_back(1);
          temp->fake_fec=n++;
          temp->real_fec=m++;
+         temp->matched=1;
       }
       else
       {
@@ -73,6 +64,7 @@ CirMgr::FEC()
             {
                o1[i]->fake_fec=temp->fake_fec;
                o1[i]->real_fec=temp->real_fec;
+               o1[i]->matched = (o1[i]->history ^ temp->history)? -1 : 1;
                find=true;
                break;              
             }
@@ -83,14 +75,15 @@ CirMgr::FEC()
            FECsizes[temp->fake_fec]=FECsizes[temp->fake_fec]+1;           
            o1[i]->fake_fec=temp->fake_fec;
            o1[i]->real_fec=m++;
+           o1[i]->matched=1;
          }
          
       }
-   }
+   } 
    for(int i=0,size=o2.size();i<size;i++)
    {
       temp = o2[i];
-
+      temp->matched=0;
       if(FEChash.check(FEC_Key<Gate>(temp),temp)  )
       {
          for(int j=0,fs=FECsizes[temp->fake_fec];j<fs;j++)
@@ -99,35 +92,21 @@ CirMgr::FEC()
             if(!satisfy(temp,o2[i],(o2[i]->history ^ temp->history)))
             {
                o2[i]->real_fec=temp->real_fec;
-               o2[i]->matched =true;
+               o2[i]->matched = ((o2[i]->history ^ temp->history) ? -1 : 1);
                break;              
             }
          }       
       }      
-   }
+   } 
 
-   cout<<"Circuit 1 :"<<endl;
-   for(int i=0,size=o1.size();i<size;i++)
-      cout<<i<<' '<<o1[i]->real_fec<<endl;
-
-   cout<<endl;
-
-   cout<<"Circuit 2 :"<<endl;
-   for(int i=0,size=o2.size();i<size;i++)
-   {
-      if(o2[i]->matched)
-         cout<<i<<' '<<o2[i]->real_fec<<endl;
-   }
-
-   pairs();
 }
 
 void generate_pattern(stringstream& ss, int n) 
 {
    int times=decide_sim_time(n),x;
 
-   cout<<"Total "<<n<<" inputs"<<endl;
-   cout<<"Attempt to simulate "<<times<<" times"<<endl;
+   //cout<<"Total "<<n<<" inputs"<<endl;
+   //cout<<"Attempt to simulate "<<times<<" times"<<endl;
 
 
    for(int t=0;t<times;t++)      // sould be 32*n  TODO...
@@ -156,8 +135,9 @@ int decide_sim_time(int input_size)
    }
    n--;
    n=n*input_size;
-*/
-   int n=input_size*10;
+   */
+   //int n=input_size*10;
+   int n=1;
    n=((n-1)/history_unit+1)*history_unit;
 
    return n;

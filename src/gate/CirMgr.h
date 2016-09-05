@@ -17,13 +17,13 @@ public:
 
    Gate* getGate(unsigned int);
    void printDFS(Gate*,int);
-   int name2index(string);
-   void traceBack(Gate*, vector<vector<pair<string, bool> > > & , int &, string,  bool &);
    void buildgate_list();
    void removeList(vector<Gate*>&);
    void clearFlag();
    void simulate();
    void his_push();
+   void his_clear();
+   void seq_trace();
 
 private:
    vector<Gate*> gate_list; // all the gates are inside
@@ -46,20 +46,46 @@ private:
 class CirMgr
 {   
 public:
-   CirMgr(){}
+   CirMgr():best_score(0){}
+   ~CirMgr()
+   {
+     delete [] matchlist;
+     delete [] candidate_list1;
+     delete [] candidate_list2;
+   }
    bool parse( ifstream&, int );
    void printcircuit( int );
-   void optimize( int );
    void simulate();
    void match();
+   void deep_match();
+   void single_match();
    void FEC();
    bool satisfy(Gate*, Gate*, bool);
-   void pairs();
+   int pairs();
+   void GO();
+   void set_output(string s){output_name = s;}
 
 private:
    void gate_parse(vector<string>& , vector<Gate*>& , Gate* , Circuit&);
+   void print_output();
+   void trace();
+
+
    Circuit c1, c2;
    SatSolver satsolver;
+   string output_name;
+
+   map<Gate*,int > cir_num;
+   
+   int best_score;
+   int* matchlist;
+   int* best_match;
+   bool* match_in_flag;
+   bool* match_out_flag;
+
+   vector< vector<Gate*> > final_pair_list;
+   vector<int>* candidate_list1;
+   vector<int>* candidate_list2;
 };
 
 #endif
